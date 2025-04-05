@@ -6,7 +6,7 @@ const Profile = () => {
     created_at: '2025-04-05 19:01:47.79967+00',
     location: 'Evanston, IL, USA',
     username: 'April Wang',
-    bio: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+    bio: '!!!',
     profilePicture: 'https://via.placeholder.com/150', // Placeholder image URL
   });
 
@@ -30,26 +30,19 @@ const Profile = () => {
 
   return (
     <div className="profile-container">
-      <h1 className="profile-title">Profile</h1>
-      <img 
-        src={user.profilePicture} 
-        alt={`${user.username}'s profile`} 
-        className="profile-picture" 
-      />
-      <div className="profile-box">
-        <p><strong>Username:</strong> {user.username}</p>
-      </div>
-      <div className="profile-box">
-        <p><strong>Bio:</strong> {user.bio || 'No bio provided.'}</p>
-      </div>
-      <div className="profile-box">
-        <p><strong>Location:</strong> {user.location}</p>
-      </div>
-      <div className="profile-box">
-        <p><strong>Profile Created On:</strong> {new Date(user.created_at).toLocaleDateString()}</p>
+      <div className="profile-card">
+        <img 
+          src={user.profilePicture} 
+          alt={`${user.username}'s profile`} 
+          className="profile-picture" 
+        />
+        <h1 className="profile-username">{user.username}</h1>
+        <p className="profile-bio">{user.bio}</p>
+        <p className="profile-location">{user.location}</p>
+        <p className="profile-date">Joined: {new Date(user.created_at).toLocaleDateString()}</p>
       </div>
 
-      <h2>Update Profile</h2>
+      <h2 className="form-title">Edit Profile</h2>
       <form onSubmit={handleSubmit} className="profile-form">
         <div className="form-group">
           <label htmlFor="username">Username:</label>
@@ -72,7 +65,8 @@ const Profile = () => {
         </div>
         <div className="form-group">
           <label htmlFor="location">Location:</label>
-          <textarea
+          <input
+            type="text"
             id="location"
             name="location"
             value={formData.location}
@@ -89,7 +83,7 @@ const Profile = () => {
             onChange={handleChange}
           />
         </div>
-        <button type="submit">Update Profile</button>
+        <button type="submit" className="profile_button">Save Changes</button>
       </form>
     </div>
   );
