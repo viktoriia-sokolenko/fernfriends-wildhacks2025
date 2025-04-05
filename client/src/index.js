@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import './index.css';
 import App from './App';
@@ -9,6 +8,8 @@ import Profile from "./pages/Profile";
 import NoPage from "./pages/NoPage";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
+import Plants from "./pages/Plants";
+import Recommendations from "./pages/Recommendations";
 import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
