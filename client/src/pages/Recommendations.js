@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { GoogleGenAI } from "@google/genai";
+require("dotenv").config({path:__dirname+'/../../.env'});
 
-const ai = new GoogleGenAI({ apiKey: "AIzaSyDe2u19c_A3LO_35gF4PCEvwKMqUrwD_Lk" });
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINIKEY });
 
 const prompt = `I’d like to grow a plant in my house. The spot has bright, direct sunlight. I also want it to be low maintenance, meaning I water it as little as possible. My room is generally dry and cool. I don’t have pets or children. I’d like it to be a flowering plant. It should also be cheap.
 
