@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import EditPlant from '../components/EditPlant';
+import Plant from '../components/Plant';
 
 const Plants = () => {
     const [plants, setPlants] = useState([
@@ -10,27 +11,25 @@ const Plants = () => {
     const [editMode, setEditMode] = useState(false); // 'view' or 'edit'
     return (
       <div className='section'>
+      <div className="headline-button">
         <h1>My Plants</h1>
-        {editMode ? (
-          <>
-          <EditPlant plants={plants}/>
-          <button onClick={() => setEditMode(false)}>Cancel</button>
-          </>
-        )
-        : (
+        <button onClick={() => setEditMode(!editMode)}>
+        {editMode ? 'Cancel' : 'Edit Plants'}
+        </button>
+      </div>
+      {editMode ? (
         <>
-        <button onClick={() => setEditMode(true)}>Edit Plants</button>
-        <div>
+        <EditPlant plants={plants} />
+        </>
+      ) : (
+        <div className='plants-container'>
+        <div className="plants-list">
           {plants.map((plant) => (
-            <div key={plant.id}>
-              <h2>{plant.name}</h2>
-              <h4>{plant.type}</h4>
-            </div>
+          <Plant plant={plant} key={plant.id} />
           ))}
         </div>
-        </>
-        )
-      }
+        </div>
+      )}
       </div>
     );
   };

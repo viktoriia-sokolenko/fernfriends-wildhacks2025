@@ -95,12 +95,34 @@ button:hover {
 .row {
   display: flex;
   justify-content: space-between;
+  flex-direction: row;
   align-items: center;
   margin-bottom: 10px;
+}
+.headline-button {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  width: 100%;
+  button {
+    width: 10%;
+  }
 }
 .section {
   margin: 20px;
   padding: 20px;
+}
+.plants-list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+.plant-card {
+  width: 25%;
+  box-shadow: 0 2px 4px #000001;
+  padding: 20px;
+  margin: 10px;
 }
 @keyframes App-logo-spin {
   from {

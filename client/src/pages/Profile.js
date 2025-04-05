@@ -115,6 +115,56 @@ const Profile = () => {
           Edit Profile
         </button>
       </div>
+<<<<<<< HEAD
+=======
+
+      <h2 className="form-title">Edit Profile</h2>
+      <form onSubmit={handleSubmit} className="profile-form">
+        <div className="form-group">
+          <label htmlFor="username">Username:</label>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            value={formData.username}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="bio">Bio:</label>
+          <textarea
+            id="bio"
+            name="bio"
+            value={formData.bio}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="location">Location:</label>
+          <input
+<<<<<<< Updated upstream
+            type="text"
+=======
+>>>>>>> Stashed changes
+            id="location"
+            name="location"
+            value={formData.location}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="profilePicture">Profile Picture URL:</label>
+          <input
+            type="text"
+            id="profilePicture"
+            name="profilePicture"
+            value={formData.profilePicture}
+            onChange={handleChange}
+          />
+        </div>
+        <button type="submit" className="profile_button">Save Changes</button>
+      </form>
+>>>>>>> 6a849539848de7beac8c6a722d2660804937e988
     </div>
   );
 };
