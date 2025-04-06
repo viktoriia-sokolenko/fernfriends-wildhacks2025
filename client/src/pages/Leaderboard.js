@@ -99,12 +99,16 @@ const Leaderboard = () => {
               <td>{user.bio}</td>
               <td>{user.points}</td>
               <td>
-                <button
-                  className="connect-button"
-                  onClick={() => handleConnectRequest(user.username)}
-                >
-                  Connect
-                </button>
+                {user.private ? (
+                  'Private'
+                ) : (
+                  <button
+                    className="connect-button"
+                    onClick={() => alert(user.contact_info)}
+                  >
+                    Connect
+                  </button>
+                )}
               </td>
             </tr>
           ))}

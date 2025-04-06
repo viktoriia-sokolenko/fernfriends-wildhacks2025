@@ -10,9 +10,17 @@
   --border: #333333;
 }
 
+/* Define the custom font */
+@font-face {
+  font-family: 'CustomFont';
+  src: url('./assets/fonts/LowresPixel-Regular.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 .App {
   text-align: center;
-  background-color: var(--background); /* Use palette color */
+  background-color: var(--text-light); /* Use palette color */
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -21,6 +29,91 @@
   }
 }
 
+/* Home page */
+body {
+  margin: 0;
+  font-family: 'Georgia', sans-serif; /* Default font for the rest of the text */
+  background-color: var(--secondary);
+  color: var(--text-dark);
+}
+
+/* Apply custom font to titles */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'CustomFont', sans-serif;
+}
+
+/* Center the divs but keep text left-aligned */
+.app-container {
+  padding: 20px;
+  max-width: 800px; /* Limit the width of the content */
+  margin: 0 auto; /* Center the container horizontally */
+  text-align: left; /* Keep text left-aligned */
+}
+
+.app-header {
+  text-align: center; /* Center the header text */
+  margin-bottom: 30px;
+  padding: 20px;
+  background-color: var(--nav-bar);
+  color: var(--text-light);
+  border-radius: 10px;
+  box-shadow: 0 4px 8px var(--shadow);
+}
+
+.app-header h1 {
+  font-size: 2.5rem;
+  margin: 0;
+  font-family: 'CustomFont', sans-serif; /* Ensure header uses custom font */
+}
+
+.app-header p {
+  font-size: 1.2rem;
+  margin-top: 10px;
+  text-align: left; /* Keep intro text left-aligned */
+  font-family: 'Arial', sans-serif; /* Default font for paragraph text */
+}
+
+/* Plant characteristics section */
+.plant-characteristics {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center; /* Center the characteristic divs */
+}
+
+/* General styles */
+.characteristic {
+  background-color: var(--background);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px var(--shadow);
+  margin-bottom: 20px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  text-align: left; /* Keep text left-aligned */
+}
+
+.characteristic:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 8px var(--shadow);
+}
+
+.characteristic p {
+  margin: 10px 0 0 0;
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+.characteristic strong {
+  color: var(--accent-color);
+}
+
+/* Apply custom font to buttons */
+button, .toggle-button, .connect-button {
+  font-family: 'CustomFont', sans-serif;
+  text-transform: uppercase; /* Optional: Make button text uppercase for a retro look */
+}
+
+/* Button styles */
 button {
   background-color: var(--button); /* Use button color */
   color: white;
@@ -34,7 +127,7 @@ button {
 }
 
 button:hover {
-  background-color: var(--button); /* Use button color */
+  background-color: var(--nav-bar); /* Use nav-bar color on hover */
 }
 
 button:active {
@@ -48,12 +141,29 @@ h3 {
   font-weight: bold;
 }
 
+/* Navbar styles */
 .navbar {
   display: flex;
   justify-content: space-between;
   width: 100%;
   padding: 20px;
   background-color: var(--nav-bar); /* Use nav bar color */
+  font-family: 'CustomFont', sans-serif; /* Apply custom font */
+  text-transform: uppercase; /* Optional: Make text uppercase for a retro look */
+}
+
+.navbar a {
+  color: var(--text-light); /* Use light text color */
+  text-decoration: none;
+  font-size: 20px;
+  font-weight: bold;
+  font-family: 'CustomFont', sans-serif; /* Ensure links also use the custom font */
+}
+
+.navbar li {
+  list-style-type: none;
+  text-align: center;
+  padding: 0 20px;
 }
 
 .sections {
@@ -251,7 +361,7 @@ h3 {
 /* Leaderboard container */
 .connections-container {
   padding: 20px;
-  font-family: Arial, sans-serif;
+  font-family: Georgia, sans-serif;
   text-align: center;
 }
 
@@ -282,7 +392,7 @@ h3 {
 
 .leaderboard-table th,
 .leaderboard-table td {
-  border: 1px solid var(--border);
+  border: 0px solid var(--border);
   padding: 10px;
   text-align: center;
 }
@@ -290,6 +400,8 @@ h3 {
 .leaderboard-table th {
   background-color: var(--nav-bar);
   color: var(--text-light);
+
+  padding: 15px;
 }
 
 .leaderboard-table tr:nth-child(even) {
@@ -306,7 +418,7 @@ h3 {
   border-radius: 50%;
 }
 
-/* Connect button */
+/* Connect button styles */
 .connect-button {
   background-color: var(--button);
   color: var(--text-light);
@@ -315,6 +427,7 @@ h3 {
   border-radius: 5px;
   cursor: pointer;
   font-size: 14px;
+  font-family: 'CustomFont', sans-serif; /* Apply custom font */
 }
 
 .connect-button:hover {
