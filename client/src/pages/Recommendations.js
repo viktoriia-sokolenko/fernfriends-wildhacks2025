@@ -64,6 +64,7 @@ function Recommendations() {
       config: {
         systemInstruction: "You are a expert gardener with a broad knowledge of various indoor plants.",
         responseMimeType: 'application/json',
+        temperature: 0.1,
         responseSchema: {
             type: Type.ARRAY,
             items: {
