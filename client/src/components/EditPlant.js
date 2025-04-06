@@ -39,13 +39,16 @@ const EditPlant = ({plants}) => {
                 days_between_watering: '',
                 last_watering: '',
             });
+            setPlantSelected(false);
         }
         else {
             const selectedPlant = plants.find(plant => plant.id === Number(e.target.value));
             setPlant(selectedPlant);
             setFormData(selectedPlant);
+            setPlantSelected(true);
         }
     }
+    const [plantSelected, setPlantSelected] = useState(false);
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
@@ -57,19 +60,19 @@ const EditPlant = ({plants}) => {
     };
     const handleReset = () => {
         setFormData(plant);
+        setPlantSelected(false);
     };
 
     return (
         <form onSubmit={handleSubmit}>
             <div className="edit-form">
                 <select onChange={selectPlant} value={formData.id}>
-                    <option value="">Select Plant</option>
+                    <option value="new">Add New</option>
                     {plants.map((plant) => (
                         <option key={plant.id} value={plant.id}>
                             {plant.name}
                         </option>
                     ))}
-                    <option value="new">Add New</option>
                 </select>
                 <label>
                     Name:
@@ -119,6 +122,9 @@ const EditPlant = ({plants}) => {
                 <div className='row'>
                     <button type="submit">Save</button>
                     <button type="button" onClick={handleReset}>Reset</button>
+                    {plantSelected && (
+                        <button type="button">Delete plant</button>
+                    )}
                 </div>
             </div>
         </form>

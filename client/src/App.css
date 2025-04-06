@@ -37,6 +37,11 @@ button {
   border-radius: 5px;
   margin: 10px;
 }
+h3 {
+  color: #009B72;
+  font-size: 20px;
+  font-weight: bold;
+}
 button:hover {
   background-color: #007B5F;
 }
@@ -91,6 +96,16 @@ button:hover {
     border-radius: 5px;
     width: 200px;
   }
+  textarea {
+    margin: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 60%;
+    }
+  label {
+    width: 100%;
+  }
 }
 .row {
   display: flex;
@@ -132,6 +147,25 @@ button:hover {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+.plant-card-left {
+  width: 25%;
+  box-shadow: 0 6px 15px #F0DFAD;
+  padding: 20px;
+  margin: 10px;
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+  img {
+    width: 30%;
+  }
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+  align-items: flex-start;
+  h2 {
+    text-align: center;
+    width: 100%;
+  }
 }
 .plant-characteristics {
   display: flex;

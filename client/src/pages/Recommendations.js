@@ -17,20 +17,22 @@ Anything else I should know?
 
 My answers are as follows:`;
 
-const Plant = ({plant}) => {
-  return (
-      <div className="plant-card">
-          <h2>{plant.name}</h2>
-          <p>Species: {plant.species}</p>
-          <p>Description: {plant.description}</p>
-          <p>Light: {plant.light}</p>
-          <p>Water: {plant.water}</p>
-          <p>Experience: {plant.experience}</p>
-          <p>Pets: {plant.pets}</p>
-          <p>Temperature: {plant.temperature}</p>
-          <p>Humidity: {plant.humidity}</p>
-      </div>
-  )
+const PlantCard = ({plant}) => {
+return (
+        <div className="plant-card-left">
+                <h2>{plant.name}</h2>
+                <p><strong> 🌿 Species:</strong> {plant.species}</p>
+                <p>{plant.description}</p>
+                <div className="plant-characteristics">
+                    <p><strong>Light:</strong> {plant.light}</p>
+                    <p><strong>Water:</strong> {plant.water}</p>
+                    <p><strong>Experience:</strong> {plant.experience}</p>
+                    <p><strong>Pets:</strong> {plant.pets}</p>
+                    <p><strong>Temperature:</strong> {plant.temperature}</p>
+                    <p><strong>Humidity:</strong> {plant.humidity}</p>
+                </div>
+        </div>
+)
 };
 
 function Recommendations() {
@@ -45,7 +47,6 @@ function Recommendations() {
   });
 
   const [recommended, setRecommended] = useState([
-    {name: '', species: '', description: '', light: '', water: '', experience: '', pets: '', temperature: '', humidity: ''}
   ]);
 
   async function gemini(formData) {
@@ -127,9 +128,11 @@ function Recommendations() {
   }
 
   return (
-    <div>
+    <div className='section'>
+    <h1>Find your next plant!</h1>
     <form onSubmit={handleSubmit}>
       <div className="edit-form">
+      <h3>Enter your preferences below</h3>
       <label>
         How much natural light does your space get?
         <textarea
@@ -198,11 +201,10 @@ function Recommendations() {
     </form>
 
   <div className='section'>
-  <h1>Recommendations</h1>
     <div className='plants-container'>
       <div className="plants-list">
         {recommended.map((plant) => (
-          <Plant plant={plant} key={plant.name} />
+          <PlantCard plant={plant} key={plant.name} />
           ))}
       </div>
     </div>
