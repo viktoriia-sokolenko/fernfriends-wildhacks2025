@@ -75,6 +75,17 @@ h3 {
     font-size: 20px;
     font-weight: bold;
   }
+  button {
+    background-color: var(--nav-bar); /* Use nav bar color */
+    color: var(--text-light); /* Use light text color */
+    font-size: 20px;
+    font-weight: bold;
+    margin: 0px;
+    padding: 5px;
+  }
+  button:hover {
+    background-color: var(--button); /* Use button color */
+  }
 }
 
 .edit-form {
