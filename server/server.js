@@ -117,17 +117,7 @@ app.get('/api/users/:id', checkAuth, async (req, res) => {
     try {
         const { data, error } = await supabase
         .from('users')
-        .select(`
-          id,
-          created_at,
-          username,
-          location,
-          bio,
-          points,
-          num_plants,
-          last_points_update,
-          profile_picture
-      `)
+        .select('*')
         .eq('id', id)
         .single();
         if (error) {
@@ -148,7 +138,7 @@ app.get('/api/users/:id', checkAuth, async (req, res) => {
 
 app.put('/api/users/:id', checkAuth, async (req, res) => {
     const { id } = req.params;
-    const { username, location, bio, points, num_plants, last_points_update, profile_picture } = req.body;
+    const { username, location, bio, points, num_plants, last_points_update, profile_picture, private, contact_info } = req.body;
     try {
       const { data: existingUser, error: userFetchError } = await supabase
         .from('users')
@@ -170,7 +160,9 @@ app.put('/api/users/:id', checkAuth, async (req, res) => {
             points: points,
             num_plants: num_plants,
             last_points_update: last_points_update,
-            profile_picture: profile_picture
+            profile_picture: profile_picture,
+            private: private,
+            contact_info: contact_info
           })
           .select()
           .single();
@@ -189,7 +181,9 @@ app.put('/api/users/:id', checkAuth, async (req, res) => {
         points,
         num_plants,
         last_points_update,
-        profile_picture
+        profile_picture,
+        private: private,
+        contact_info: contact_info
       });
       const { data, error } = await supabase
           .from('users')
@@ -200,7 +194,9 @@ app.put('/api/users/:id', checkAuth, async (req, res) => {
               points: points,
               num_plants: num_plants,
               last_points_update: last_points_update,
-              profile_picture: profile_picture
+              profile_picture: profile_picture,
+              private: private,
+              contact_info: contact_info
           })
           .eq('id', id)
           .single();
