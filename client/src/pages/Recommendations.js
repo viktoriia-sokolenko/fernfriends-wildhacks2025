@@ -7,12 +7,13 @@ const prompt = `I’d like to grow a plant in my house.
 
 Please give me three plant recommendations with a description of how the characteristics of each relate to my preferences. The questions are:
 
-How much natural light does your space get? (Low, Medium, Bright)
-How often do you want to water your plant? (Frequently, Moderately, Infrequently)
-What's your experience with houseplants? (Beginner, Intermediate, Experienced)
-Do you have pets or small children? (Yes, No)
-What is the average temperature in your home? (Cool, Average, Warm)
-What is the average humidity in your home? (Low, Average, High)
+How much natural light does your space get?
+How often do you want to water your plant? 
+What's your experience with houseplants?
+Do you have pets or small children?
+What is the average temperature in your home?
+What is the average humidity in your home?
+Anything else I should know?
 
 My answers are as follows:`;
 
@@ -40,6 +41,7 @@ function Recommendations() {
     pets: 'Yes',
     temperature: 'Cool (60-65°F)',
     humidity: 'Low (Dry air)',
+    extra: '',
   });
 
   const [recommended, setRecommended] = useState([
@@ -110,12 +112,7 @@ function Recommendations() {
         },
       },
     });
-    console.log(typeof response.text);
-    if (Array.isArray(JSON.parse(response.text))) {
-      setRecommended(JSON.parse(response.text));
-    } else {
-      console.error("Response is not an array:", response.text);
-    }
+    setRecommended(JSON.parse(response.text));
   }
 
   const handleChange = (event) => {
@@ -135,55 +132,64 @@ function Recommendations() {
       <div className="edit-form">
       <label>
         How much natural light does your space get?
-        <select value={formData.light} onChange={handleChange}>
-          <option value="low">Low (North-facing window, or very shaded)</option>
-          <option value="medium">Medium (East or West-facing window)</option>
-          <option value="bright">Bright (South-facing window, or lots of direct sun)</option>
-        </select>
+        <textarea
+          name="light"
+          value={formData.light}
+          onChange={handleChange}
+        />
       </label>
 
       <label>
         How often do you want to water your plant?
-        <select value={formData.water} onChange={handleChange}>
-          <option value="frequent">Frequently (Every few days)</option>
-          <option value="moderate">Moderately (Once a week or so)</option>
-          <option value="infrequent">Infrequently (Every couple of weeks or more)</option>
-        </select>
+        <textarea
+          name="water"
+          value={formData.water}
+          onChange={handleChange}
+        />
       </label>
 
       <label>
         What's your experience with houseplants?
-        <select value={formData.experience} onChange={handleChange}>
-          <option value="beginner">Beginner (New to houseplants)</option>
-          <option value="intermediate">Intermediate (Some experience)</option>
-          <option value="experienced">Experienced (Confident with plants)</option>
-        </select>
+        <textarea
+          name="experience"
+          value={formData.experience}
+          onChange={handleChange}
+        />
       </label>
 
       <label>
         Do you have pets or small children?
-        <select value={formData.pets} onChange={handleChange}>
-          <option value="yes">Yes</option>
-          <option value="no">No</option>
-        </select>
+        <textarea
+          name="pets"
+          value={formData.pets}
+          onChange={handleChange}
+        />
       </label>
 
       <label>
         What is the average temperature in your home?
-        <select value={formData.temperature} onChange={handleChange}>
-          <option value="cool">Cool (60-65°F)</option>
-          <option value="average">Average (65-75°F)</option>
-          <option value="warm">Warm (75-80°F)</option>
-        </select>
+        <textarea
+          name="temperature"
+          value={formData.temperature}
+          onChange={handleChange}
+        />
       </label>
 
       <label>
         What is the average humidity in your home?
-        <select value={formData.humidity} onChange={handleChange}>
-          <option value="low">Low (Dry air)</option>
-          <option value="average">Average</option>
-          <option value="high">High (Humid air)</option>
-        </select>
+        <textarea
+          name="humidity"
+          value={formData.humidity}
+          onChange={handleChange}
+        />
+      </label>
+      <label>
+        Anything else I should know?
+        <textarea
+          name="extra"
+          value={formData.extra}
+          onChange={handleChange}
+        />
       </label>
       <div className='row'>
         <button type="submit">Get Recommendations</button>
