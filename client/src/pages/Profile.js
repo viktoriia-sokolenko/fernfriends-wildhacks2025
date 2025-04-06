@@ -9,7 +9,7 @@ const Profile = () => {
     username: 'April Wang',
     location: 'Evanston, IL, USA',
     bio: '!!!',
-    points: 120,
+    points: 10,
     profile_picture: 'https://www.pixcrafter.com/wp-content/uploads/2024/03/cartoon-style-indoor-plant-vector-illustration.jpg',
     num_plants: 12,
     last_points_update: '2025-03-29T19:01:47.799Z', // Last time points were updated
@@ -24,7 +24,7 @@ const Profile = () => {
 
   const [editMode, setEditMode] = useState(false);
 
-  const { token, userId } = useAuth();
+  const { token, userId, getLevelInfo } = useAuth();
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -32,60 +32,7 @@ const Profile = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  // Function to determine the level, name, and emoji based on points
-  const getLevelInfo = (points) => {
-    if (points >= 750) return { level: 25, name: 'Canopy 🌳' };
-    if (points >= 500) return { level: 20, name: 'Bloom 🌸' };
-    if (points >= 300) return { level: 15, name: 'Bud 🌼' };
-    if (points >= 150) return { level: 10, name: 'Leaf 🍃' };
-    if (points >= 50) return { level: 5, name: 'Seedling 🌿' };
-    if (points >= 10) return { level: 1, name: 'Sprout 🌱' };
-    return { level: 0, name: 'Seed 🌰' };
-  };
-
   const { level, name } = getLevelInfo(user.points);
-
-  // Function to add weekly points based on the number of plants
-  const calculateAdditionalPoints = () => {
-    let additionalPoints = 0;
-    if (user.num_plants >= 21) {
-      additionalPoints = 20;
-    } else if (user.num_plants >= 11) {
-      additionalPoints = 15;
-    } else if (user.num_plants >= 6) {
-      additionalPoints = 10;
-    } else if (user.num_plants >= 2) {
-      additionalPoints = 5;
-    }
-    return additionalPoints;
-  };
-
-  // Check if a week has passed since the last points update
-  useEffect(() => {
-    const lastUpdate = new Date(user.last_points_update);
-    const now = new Date();
-    const oneWeekInMs = 7 * 24 * 60 * 60 * 1000; // One week in milliseconds
-
-    if (now - lastUpdate >= oneWeekInMs) {
-      let newPoints = calculateAdditionalPoints();
-      console.log('Adding weekly points:', newPoints);
-      setUser((prevUser) => ({
-        ...prevUser,
-        points: prevUser.points + newPoints,
-        last_points_update: now.toISOString(),
-      }));
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        points: prevFormData.points + newPoints,
-        last_points_update: now.toISOString(),
-      }));
-      console.log('Updated points:', user.points);
-    }
-  }, []);
-  // Update the points on the database whenever they change on frontend
-  useEffect(() => {
-    handleEdits();
-  }, [user.last_points_update]);
 
   const handleEdits = async (e) => {
     console.log('Saving:', formData);
