@@ -96,6 +96,7 @@ const checkAuth = async (req, res, next) => {
     };
 
 app.get('/api/users', checkAuth, async (req, res) => {
+  console.log('Fetching all users');
     try {
         const { data, error } = await supabase
         .from('users')
@@ -103,8 +104,14 @@ app.get('/api/users', checkAuth, async (req, res) => {
         if (error) {
             throw error;
         }
+        if (!data) {
+            console.log('No users found');
+            return res.status(404).send('No users found');
+        }
+        console.log('Fetched users data:', data);
         res.json(data);
     } catch (error) {
+        console.error('Error fetching users:', error);
         res.status(500).send('Server Error');
     }
 });

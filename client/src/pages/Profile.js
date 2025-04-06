@@ -13,6 +13,8 @@ const Profile = () => {
     num_plants: 0,
     created_at: '',
     last_points_update: '',
+    private: true,
+    contact_info: ''
   });
 
   const [formData, setFormData] = useState({
@@ -20,6 +22,8 @@ const Profile = () => {
     bio: user?.bio || '',
     location: user?.location || '',
     profile_picture: user?.profile_picture || '',
+    private: user?.private || true,
+    contact_info: user?.contact_info || ''
   });
 
   const [editMode, setEditMode] = useState(false);
@@ -145,6 +149,7 @@ const Profile = () => {
         const data = await response.json();
         console.log('User data:', data);
         setUser(data);
+        setFormData(data);
       } catch (error) {
         console.error('Error fetching user data:', error);
       }
@@ -183,6 +188,17 @@ const Profile = () => {
             <label htmlFor="profilePicture">Profile Picture URL:</label>
             <input type="text" id="profilePicture" name="profilePicture" value={formData.profile_picture} onChange={handleChange} />
           </div>
+          <div className="form-group">
+            <label htmlFor="private">Private:</label>
+            <select id="private" name="private" value={formData.private} onChange={handleChange}>
+              <option value={true}>Yes</option>
+              <option value={false}>No</option>
+            </select>
+          </div>
+          <div className="form-group">
+            <label htmlFor="contactInfo">Contact Info:</label>
+            <input type="text" id="contactInfo" name="contact_info" value={formData.contact_info} onChange={handleChange} />
+          </div>
           <button onClick={handleEdits} className="profile_button">Save Changes</button>
           <button className="profile_button delete_button" onClick={handleDelete}>Delete Profile</button>
           <button className="profile_button cancel_button" onClick={() => setEditMode(false)}>Cancel</button>
@@ -195,8 +211,10 @@ const Profile = () => {
           <h1 className="profile-username">{user.username}</h1>
           <p className="profile-level-name">{name}</p>
           <p className="profile-bio">{user.bio}</p>
+          {user.contact_info && <p className="profile-bio">Contact me: {user.contact_info}</p> }
           <p className="profile-location">{user.location}</p>
-          <p className="profile-date">Joined: {formatDate(user.created_at)}</p> {/* Updated to use formatDate */}
+          <p className="profile-date">Joined: {formatDate(user.created_at)}</p>
+          <p className="profile-date">{user.private ? 'Private' : 'Public'}</p>
           <div className="profile-stats">
             <p><strong>Level:</strong> {level}</p>
             <p><strong>Points:</strong> {user.points}</p>
