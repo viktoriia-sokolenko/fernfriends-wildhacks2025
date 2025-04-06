@@ -10,6 +10,7 @@ import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import Plants from "./pages/Plants";
 import Recommendations from "./pages/Recommendations";
+import Leaderboard from "./pages/Leaderboard";
 import reportWebVitals from './reportWebVitals';
 import { AuthProvider } from './AuthContext';
 
@@ -27,6 +28,7 @@ root.render(
           <Route path="profile" element={<Profile />} />
           <Route path="plants" element={<Plants />} />
           <Route path="recommend" element={<Recommendations />} />
+          <Route path="leaderboard" element={<Leaderboard />} />
           <Route path="*" element={<NoPage />} />
         </Route>
       </Routes>

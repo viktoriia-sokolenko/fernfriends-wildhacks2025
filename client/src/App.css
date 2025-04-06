@@ -236,3 +236,76 @@ h3 {
     transform: rotate(360deg);
   }
 }
+
+/* Leaderboard container */
+.connections-container {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  text-align: center;
+}
+
+.connections-container h1 {
+  color: var(--text-dark);
+  margin-bottom: 20px;
+}
+
+/* Search bar */
+.search-bar {
+  margin-bottom: 20px;
+}
+
+.search-input {
+  width: 50%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+}
+
+/* Leaderboard table */
+.leaderboard-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 auto;
+}
+
+.leaderboard-table th,
+.leaderboard-table td {
+  border: 1px solid var(--border);
+  padding: 10px;
+  text-align: center;
+}
+
+.leaderboard-table th {
+  background-color: var(--nav-bar);
+  color: var(--text-light);
+}
+
+.leaderboard-table tr:nth-child(even) {
+  background-color: var(--secondary);
+}
+
+.leaderboard-table tr:hover {
+  background-color: var(--shadow);
+}
+
+.leaderboard-profile-picture {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+
+/* Connect button */
+.connect-button {
+  background-color: var(--button);
+  color: var(--text-light);
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.connect-button:hover {
+  background-color: var(--nav-bar);
+}
