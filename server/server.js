@@ -236,7 +236,8 @@ app.delete('/api/users/:id', checkAuth, async (req, res) => {
         throw error;
       }
       if (!data || data.length === 0) {
-        return res.status(404).json({ error: 'Plant not found' });
+        console.log('No plants found for user:', id);
+        return res.status(404).json({ error: 'Plants not found' });
       }
       console.log('Fetched plant data:', data);
       res.json(data);
