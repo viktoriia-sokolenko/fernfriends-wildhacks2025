@@ -1,4 +1,5 @@
 # FernFriends
+🌱 Leverage the mental health benefits of taking care of plants. Get recommendations, level up your gardening skills, and connect with other plant lovers with FernFriends!
 ## Authors
 Viktoriia Sokolenko, Satviki Madaan, Mingyuan Wang, April Wang
 ### Used Packages
