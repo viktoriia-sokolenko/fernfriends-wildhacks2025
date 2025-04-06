@@ -11,11 +11,13 @@ import SignUp from "./pages/SignUp";
 import Plants from "./pages/Plants";
 import Recommendations from "./pages/Recommendations";
 import reportWebVitals from './reportWebVitals';
+import { AuthProvider } from './AuthContext';
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
-    <React.StrictMode>
+   <React.StrictMode>
+    <AuthProvider>
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Layout />}>
@@ -29,7 +31,7 @@ root.render(
         </Route>
       </Routes>
     </BrowserRouter>
-  </React.StrictMode>
+    </AuthProvider>
   </React.StrictMode>
 );
 

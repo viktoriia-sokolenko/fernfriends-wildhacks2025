@@ -231,14 +231,13 @@ app.delete('/api/users', checkAuth, async (req, res) => {
   });
   
   // GET a single plant by ID
-  app.get('/plants/:id', checkAuth, async (req, res) => {
+  app.get('/api/plants/:id', checkAuth, async (req, res) => {
     const id = req.params.id;
+    console.log('Fetching plant for user:', id);
     const { data, error } = await supabase
       .from('plants')
       .select('*')
-      .eq('id', id)
-      .single();
-  
+      .eq('user_id', id);  
     if (error) {
       console.error(`Error fetching plant with ID ${id}:`, error);
       return res.status(404).json({ error: 'Plant not found' });

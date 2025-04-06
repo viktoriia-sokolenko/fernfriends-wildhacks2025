@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../AuthContext';
+
 
 const SignIn = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState("");
     const navigate = useNavigate();
+    const { setToken, setUserId } = useAuth(); 
 
 
     const handleSignIn = async (e) => {
@@ -26,6 +29,10 @@ const SignIn = () => {
             console.log("Login successful");
             console.log("User ID:", data.userId);
             console.log("Token:", data.token);
+            localStorage.setItem("access_token", data.token);
+            localStorage.setItem("user_id", data.userId);
+            setToken(data.token);
+            setUserId(data.userId);
             setError("");
             navigate('/');
         } catch (err) {
