@@ -5,17 +5,17 @@ const ai = new GoogleGenAI({ apiKey: "AIzaSyBf1d4RLQAGbicb1xlCxqXJxFUfHS0oPFw" }
 
 const prompt = `I’d like to grow a plant in my house.
 
-Please give me three plant recommendations with a description of how the characteristics of each relate to my preferences. The questions are:
+Please give me three plant recommendations with a description of how the characteristics of each relate to my preferences. The preferences are:`;
 
-How much natural light does your space get?
-How often do you want to water your plant? 
-What's your experience with houseplants?
-Do you have pets or small children?
-What is the average temperature in your home?
-What is the average humidity in your home?
-Anything else I should know?
-
-My answers are as follows:`;
+const questions = {
+  light: "How much natural light does your space get?",
+  water: "How often do you want to water your plant?",
+  experience: "What's your experience with houseplants?",
+  pets: "Do you have pets or small children?",
+  temperature: "What is the average temperature in your home?",
+  humidity: "What is the average humidity in your home?",
+  extra: "Anything else I should know?",
+};
 
 const PlantCard = ({plant}) => {
 return (
@@ -50,9 +50,17 @@ function Recommendations() {
   ]);
 
   async function gemini(formData) {
+    const renamedFormData = {};
+    Object.keys(formData).forEach((key) => {
+      const newKey = questions[key];
+      renamedFormData[newKey] = formData[key];
+    });
+
+    console.log(JSON.stringify(renamedFormData));
+
     const response = await ai.models.generateContent({
       model: "gemini-2.0-flash",
-      contents: prompt + JSON.stringify(formData),
+      contents: prompt + JSON.stringify(renamedFormData),
       config: {
         systemInstruction: "You are a expert gardener with a broad knowledge of various indoor plants.",
         responseMimeType: 'application/json',
