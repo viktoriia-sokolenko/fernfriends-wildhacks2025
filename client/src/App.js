@@ -21,7 +21,7 @@ function App() {
   return (
     <div className="app-container">
       <header className="app-header">
-        <h1>Welcome to Our Indoor Plant Care Hub! 🌱</h1>
+        <h1>Welcome to FernFriends! 🌱</h1>
         <p className="app-intro">
           Whether you're a seasoned plant parent or just starting out, this is your space to learn, grow, and enjoy the many perks of keeping greenery around. Indoor plants don’t just brighten a room—they can genuinely make life better in small but meaningful ways.
         </p>
