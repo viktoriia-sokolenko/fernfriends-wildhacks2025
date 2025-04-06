@@ -115,8 +115,6 @@ const Profile = () => {
           Edit Profile
         </button>
       </div>
-<<<<<<< HEAD
-=======
 
       <h2 className="form-title">Edit Profile</h2>
       <form onSubmit={handleSubmit} className="profile-form">
@@ -161,7 +159,6 @@ const Profile = () => {
         </div>
         <button type="submit" className="profile_button">Save Changes</button>
       </form>
->>>>>>> 6a849539848de7beac8c6a722d2660804937e988
     </div>
   );
 };
