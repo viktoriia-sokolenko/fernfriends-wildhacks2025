@@ -5,7 +5,9 @@ const ai = new GoogleGenAI({ apiKey: "AIzaSyBf1d4RLQAGbicb1xlCxqXJxFUfHS0oPFw" }
 
 const prompt = `I’d like to grow a plant in my house.
 
-Please give me three plant recommendations with a description of how the characteristics of each relate to my preferences. The preferences are:`;
+Please give me three plant recommendations with a description of how the characteristics of each relate to my preferences. The preferences are in JSON format below:
+
+`;
 
 const questions = {
   light: "How much natural light does your space get?",
@@ -37,12 +39,12 @@ return (
 
 function Recommendations() {
   const [formData, setFormData] = useState({
-    light: 'Low (North-facing window, or very shaded)',
-    water: 'Frequently (Every few days)',
-    experience: 'Beginner (New to houseplants)',
-    pets: 'Yes',
-    temperature: 'Cool (60-65°F)',
-    humidity: 'Low (Dry air)',
+    light: 'North-facing window, or very shaded',
+    water: 'Every few days',
+    experience: 'New to houseplants',
+    pets: 'one cat',
+    temperature: '60-65°F',
+    humidity: 'Dry air',
     extra: '',
   });
 
@@ -56,7 +58,7 @@ function Recommendations() {
       renamedFormData[newKey] = formData[key];
     });
 
-    console.log(JSON.stringify(renamedFormData));
+    console.log(prompt + JSON.stringify(renamedFormData));
 
     const response = await ai.models.generateContent({
       model: "gemini-2.0-flash",
@@ -64,7 +66,7 @@ function Recommendations() {
       config: {
         systemInstruction: "You are a expert gardener with a broad knowledge of various indoor plants.",
         responseMimeType: 'application/json',
-        temperature: 0.1,
+        temperature: 2.0,
         responseSchema: {
             type: Type.ARRAY,
             items: {
