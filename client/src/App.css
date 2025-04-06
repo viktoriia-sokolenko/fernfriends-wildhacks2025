@@ -282,7 +282,7 @@ h3 {
 
 .leaderboard-table th,
 .leaderboard-table td {
-  border: 1px solid var(--border);
+  border: 0px solid var(--border);
   padding: 10px;
   text-align: center;
 }
@@ -290,6 +290,8 @@ h3 {
 .leaderboard-table th {
   background-color: var(--nav-bar);
   color: var(--text-light);
+
+  padding: 15px;
 }
 
 .leaderboard-table tr:nth-child(even) {
