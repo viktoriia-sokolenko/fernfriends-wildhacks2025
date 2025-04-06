@@ -8,7 +8,7 @@ const Profile = () => {
     username: '',
     bio: '',
     location: '',
-    profile_picture: 'https://www.pixcrafter.com/wp-content/uploads/2024/03/cartoon-style-indoor-plant-vector-illustration.jpg',
+    profile_picture: '',
     points: 0,
     num_plants: 0,
     created_at: '',
