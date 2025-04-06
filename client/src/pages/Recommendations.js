@@ -45,7 +45,7 @@ function Recommendations() {
     pets: 'one cat',
     temperature: '60-65°F',
     humidity: 'Dry air',
-    extra: '',
+    extra: 'Ming loves flowers',
   });
 
   const [recommended, setRecommended] = useState([
