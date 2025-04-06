@@ -5,7 +5,7 @@ const ai = new GoogleGenAI({ apiKey: "AIzaSyBf1d4RLQAGbicb1xlCxqXJxFUfHS0oPFw" }
 
 const prompt = `I’d like to grow a plant in my house.
 
-Please give me three plant recommendations with a description of how the characteristics of each relate to my preferences. The preferences are in JSON format below:
+Please give me three recommendations and describe how each of their characteristics relate to my preferences. The preferences are in JSON format below:
 
 `;
 
