@@ -96,6 +96,7 @@ const checkAuth = async (req, res, next) => {
     };
 
 app.get('/api/users', checkAuth, async (req, res) => {
+  console.log('Fetching all users');
     try {
         const { data, error } = await supabase
         .from('users')
