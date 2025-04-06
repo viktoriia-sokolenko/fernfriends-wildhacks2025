@@ -1,21 +1,38 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const SignUp = () => {
-    const [formData, setFormData] = useState({ username: '', email: '' });
+    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [error, setError] = useState("");
+    const navigate = useNavigate();
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
-    };
-
-    const handleSubmit = (e) => {
+    const handleSignUp = async (e) => {
         e.preventDefault();
-        console.log('Form submitted:', formData);
+        console.log(process.env.REACT_APP_API_BASE_URL);
+        try {
+            const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/register`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ email, password, username }),
+            });
+            const data = await response.json();
+            console.log(data);
+            if (data.error) throw new Error(data.error);
+            setError("Registration successful! Confirm your email and sign in.");
+            navigate('/');
+        } catch (err) {
+            setError(err.message);
+        }
     };
 
     return (
         <div className="section">
-            <form onSubmit={handleSubmit}>
+            <form>
                 <div className="edit-form">
                 <div>
                     <label htmlFor="username">Username:</label>
@@ -23,8 +40,8 @@ const SignUp = () => {
                         type="text"
                         id="username"
                         name="username"
-                        value={formData.username}
-                        onChange={handleChange}
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
                         required
                     />
                 </div>
@@ -34,8 +51,8 @@ const SignUp = () => {
                         type="email"
                         id="email"
                         name="email"
-                        value={formData.email}
-                        onChange={handleChange}
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                         required
                     />
                 </div>
@@ -45,7 +62,7 @@ const SignUp = () => {
                         type="password"
                         id="password"
                         name="password"
-                        onChange={handleChange}
+                        onChange={(e) => setPassword(e.target.value)}
                         required
                     />
                 </div>
@@ -55,13 +72,14 @@ const SignUp = () => {
                         type="password"
                         id="confirmPassword"
                         name="confirmPassword"
-                        onChange={handleChange}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
                         required
                     />
                 </div>
-                <button type="submit">Sign Up</button>
+                <button onClick={handleSignUp}>Sign Up</button>
                 </div>
             </form>
+            {error && <p className="error">{error}</p>}
         </div>
     );
 };

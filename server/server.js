@@ -5,7 +5,7 @@ require('dotenv').config();
 const cors = require('cors');
 
 const app = express();
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 4000;
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
 
@@ -43,12 +43,14 @@ app.post("/api/login", async (req, res) => {
 
 
 app.post("/api/register", async (req, res) => {
-    const { email, password, first_name, last_name, username } = req.body;
+    const { email, password, username } = req.body;
     try {
         const { data, error } = await supabase.auth.signUp({
         email,
         password,
         });
+        console.log("User data:", data);
+        console.log("Error data:", error);
         if (error) throw error;
         if (!data.user) throw new Error("Registration failed");
         const { error: insertError } = await supabase
@@ -56,10 +58,7 @@ app.post("/api/register", async (req, res) => {
             .insert([
                 {
                     id: data.user.id,
-                    email: data.user.email,
-                    first_name: data.user.first_name,
-                    last_name: data.user.last_name,
-                    username: data.user.username,
+                    username: username,
                 }
             ]);
         if (insertError) {

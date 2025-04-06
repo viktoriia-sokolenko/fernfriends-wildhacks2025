@@ -1,18 +1,41 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const SignIn = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [error, setError] = useState("");
+    const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
+
+    const handleSignIn = async (e) => {
         e.preventDefault();
-        console.log('Email:', email);
-        console.log('Password:', password);
+        try {
+            const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/login`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ email, password }),
+            });
+
+            const data = await response.json();
+            if (data.error) throw new Error(data.error);
+            localStorage.setItem("access_token", data.token);
+            localStorage.setItem("user_id", data.userId);
+            console.log("Login successful");
+            console.log("User ID:", data.userId);
+            console.log("Token:", data.token);
+            setError("");
+            navigate('/');
+        } catch (err) {
+            setError(err.message);
+        }
     };
 
     return (
         <div className="section">
-            <form onSubmit={handleSubmit}>
+            <form>
             <div className="edit-form">
                 <div>
                     <label htmlFor="email">Email:</label>
@@ -34,7 +57,8 @@ const SignIn = () => {
                         required
                     />
                 </div>
-                <button type="submit">Sign In</button>
+                <button onClick={handleSignIn} >Sign In</button>
+                {error && <p className="error">{error}</p>}
             </div>
             </form>
             </div>
