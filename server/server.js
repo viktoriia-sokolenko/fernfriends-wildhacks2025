@@ -5,7 +5,7 @@ require('dotenv').config();
 const cors = require('cors');
 
 const app = express();
-const port = process.env.PORT || 4000;
+const PORT = process.env.PORT || 4000;
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
 
@@ -106,11 +106,15 @@ app.get('/api/users/:id', checkAuth, async (req, res) => {
         const { data, error } = await supabase
         .from('users')
         .select(`
-            id,
-            created_at, username, location, bio, level, points, num_plants
-
-            )
-        `)
+          id,
+          created_at,
+          username,
+          location,
+          bio,
+          level,
+          points,
+          num_plants
+      `)
         .eq('id', id)
         .single();
         if (error) {
@@ -126,14 +130,13 @@ app.get('/api/users/:id', checkAuth, async (req, res) => {
 });
 
 
-app.patch('/api/users/:id', checkAuth, async (req, res) => {
+app.put('/api/users/:id', checkAuth, async (req, res) => {
     const { id } = req.params;
-    const { created_at, username, location, bio, level, points, num_plants
-    } = req.body;
+    const { created_at, username, location, bio, level, points, num_plants } = req.body;
     try {
         const { data, error } = await supabase
             .from('users')
-            .update({
+            .upsert({
                 created_at: created_at,
                 username: username,
                 location: location,
@@ -155,52 +158,12 @@ app.patch('/api/users/:id', checkAuth, async (req, res) => {
     }
 });
 
-app.patch('/api/plants/:id', checkAuth, async (req, res) => {
-    const { id } = req.params; // This should be the plant's ID
-    const { birthday, user_id, days_between_watering, name, species, last_watering } = req.body;
-
-    try {
-        const updates = {};
-        if (birthday !== undefined) updates.birthday = birthday;
-        if (user_id !== undefined) updates.user_id = user_id;
-        if (days_between_watering !== undefined) updates.days_between_watering = days_between_watering;
-        if (name !== undefined) updates.name = name;
-        if (species !== undefined) updates.species = species;
-        if (last_watering !== undefined) updates.last_watering = last_watering;
-
-        if (Object.keys(updates).length === 0) {
-            return res.status(400).json({ error: 'No update parameters provided' });
-        }
-
-        const { data, error } = await supabase
-            .from('plants') // Correct table name should be 'plants'
-            .update(updates)
-            .eq('id', id) // Update based on the plant's ID
-            .select() // It's good practice to select the updated data
-            .single();
-
-        if (error) {
-            console.error('Error updating plant:', error);
-            return res.status(500).json({ error: 'Failed to update plant' });
-        }
-
-        if (!data) {
-            return res.status(404).json({ error: 'Plant not found' });
-        }
-
-        res.json({ message: "Plant updated successfully", data });
-    } catch (error) {
-        console.error('Error updating plant:', error);
-        res.status(500).send('Server Error');
-    }
-});
-
 
 app.delete('/api/users', checkAuth, async (req, res) => {
-    const { saved_id, user_id } = req.body;
+    const { user_id } = req.body;
     try {
         const { data, error } = await supabase
-        .from('Users')
+        .from('users')
         .delete()
         .eq('id', user_id)
         if (error) throw error;
@@ -210,14 +173,10 @@ app.delete('/api/users', checkAuth, async (req, res) => {
     }
 });
 
-
-  
-
-  
   // --- Plant API Endpoints ---
   
   // GET all plants
-  app.get('/plants', checkAuth, async (req, res) => { // id, birthday, userid, days between watering plants/id
+  app.get('/api/plants', checkAuth, async (req, res) => { // id, birthday, userid, days between watering plants/id
     const { data, error } = await supabase
       .from('plants')
       .select('*');
@@ -230,7 +189,7 @@ app.delete('/api/users', checkAuth, async (req, res) => {
     res.json(data);
   });
   
-  // GET a single plant by ID
+  // GET all plants for a specific user
   app.get('/api/plants/:id', checkAuth, async (req, res) => {
     const id = req.params.id;
     console.log('Fetching plant for user:', id);
@@ -246,45 +205,9 @@ app.delete('/api/users', checkAuth, async (req, res) => {
     res.json(data);
   });
   
-  // GET all plants for a specific user
-  app.get('/users/:user_id/plants', checkAuth, async (req, res) => {
-    const userId = req.params.user_id;
-    const { data, error } = await supabase
-      .from('plants')
-      .select('*')
-      .eq('user_id', userId);
   
-    if (error) {
-      console.error(`Error fetching plants for user ${userId}:`, error);
-      return res.status(500).json({ error: 'Failed to fetch plants for this user' });
-    }
-  
-    res.json(data);
-  });
-  
-  // POST a new plant
-  app.post('/plants', async (req, res) => {
-    const { name, species, water_needs, sunlight_needs, user_id } = req.body;
-  
-    if (!name || !user_id) {
-      return res.status(400).json({ error: 'Name and user_id are required' });
-    }
-  
-    const { data, error } = await supabase
-      .from('plants')
-      .insert([{ name, species, water_needs, sunlight_needs, user_id }])
-      .select();
-  
-    if (error) {
-      console.error('Error creating plant:', error);
-      return res.status(500).json({ error: 'Failed to create plant' });
-    }
-  
-    res.status(201).json(data[0]);
-  });
-  
-  // PUT (update) an existing plant
-  app.put('/plants/:id', checkAuth, async (req, res) => {
+  // PUT (update or add) a plant
+  app.put('/api/plants/:id', checkAuth, async (req, res) => {
     const id = req.params.id;
     const { name, species, water_needs, sunlight_needs, user_id } = req.body;
   
@@ -319,7 +242,7 @@ app.delete('/api/users', checkAuth, async (req, res) => {
   });
   
   // DELETE a plant
-  app.delete('/plants/:id', checkAuth, async (req, res) => {
+  app.delete('/api/plants/:id', checkAuth, async (req, res) => {
     const id = req.params.id;
     const { error } = await supabase
       .from('plants')
@@ -334,7 +257,6 @@ app.delete('/api/users', checkAuth, async (req, res) => {
     res.status(204).send();
   });
 
-  const PORT = process.env.PORT || 4000;
   app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
   });
