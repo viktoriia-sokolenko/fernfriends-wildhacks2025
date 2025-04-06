@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import './App.css';
 
 function App() {
-  // State to manage the visibility of each section (all sections are initially closed)
   const [visibleSections, setVisibleSections] = useState({
     breatheEasier: false,
     stressLess: false,
@@ -11,7 +10,6 @@ function App() {
     moodEnhancement: false,
   });
 
-  // Toggle visibility of a section
   const toggleSection = (section) => {
     setVisibleSections((prev) => ({
       ...prev,

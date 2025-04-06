@@ -157,7 +157,6 @@ const Profile = () => {
     fetchUserData();
   }, [token, userId]);
 
-    // Function to format the 'created_at' date
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', {

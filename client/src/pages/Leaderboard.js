@@ -1,32 +1,28 @@
 import React, { useState } from 'react';
-import '../App.css'; // Use App.css for styling
+import '../App.css';
 import { useEffect } from 'react';
 import { useAuth } from '../AuthContext';
 
 const Leaderboard = () => {
-  const { userId, token } = useAuth();
+  const { token } = useAuth();
   const [users , setUsers] = useState([]);
   
+  const [searchLocation, setSearchLocation] = useState('');
+  const [filteredUsers, setFilteredUsers] = useState([]);
 
-  const [searchLocation, setSearchLocation] = useState(''); // Location filter
-  const [filteredUsers, setFilteredUsers] = useState([]); // Filtered users based on location
-  //   usersData.sort((a, b) => b.points - a.points) // Sort users by points in descending order
-  // );
-
-  // Handle location search
   const handleSearch = (e) => {
     const location = e.target.value.toLowerCase();
     setSearchLocation(location);
+    if (!location || location.trim() === '') {
+      setFilteredUsers(users); 
+      return;
+    }
     const filtered = users
-      .filter((user) => user.location.toLowerCase().includes(location))
-      .sort((a, b) => b.points - a.points); // Ensure sorted order after filtering
+      .filter((user) => user.location?.toLowerCase().includes(location))
+      .sort((a, b) => b.points - a.points);
     setFilteredUsers(filtered);
   };
 
-  // Handle sending a connect request
-  const handleConnectRequest = (username) => {
-    alert(`Connect request sent to ${username}!`);
-  };
   useEffect(() => {
     const fetchUsersData = async () => {
       try {
@@ -48,15 +44,13 @@ const Leaderboard = () => {
           throw new Error('Failed to fetch users data');
         }
         const data = await response.json();
-        setUsers(data.sort((a, b) => b.points - a.points)); // Sort users by points
-        setFilteredUsers(data.sort((a, b) => b.points - a.points)); // Set initial filtered users
+        setUsers(data.sort((a, b) => b.points - a.points));
+        setFilteredUsers(data.sort((a, b) => b.points - a.points));
         setSearchLocation(''); // Reset search location
       } catch (error) {
         console.error('Error fetching users data:', error);
       }
     };
-
-
     fetchUsersData();
   }, []);
   return (
