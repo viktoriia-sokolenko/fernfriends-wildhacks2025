@@ -32,7 +32,7 @@
 /* Home page */
 body {
   margin: 0;
-  font-family: 'Georgia', sans-serif; /* Default font for the rest of the text */
+  font-family: 'Arial', sans-serif; /* Default font for the rest of the text */
   background-color: var(--secondary);
   color: var(--text-dark);
 }
@@ -81,7 +81,7 @@ h1, h2, h3, h4, h5, h6 {
   align-items: center; /* Center the characteristic divs */
 }
 
-/* General styles */
+/* General styles for toggle sections */
 .characteristic {
   background-color: var(--background);
   padding: 20px;
@@ -103,8 +103,27 @@ h1, h2, h3, h4, h5, h6 {
   line-height: 1.6;
 }
 
-.characteristic strong {
-  color: var(--accent-color);
+/* Toggle button styles */
+.toggle-button {
+  background-color: var(--button);
+  color: var(--text-light);
+  border: none;
+  padding: 10px 15px;
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  width: 100%;
+  text-align: left;
+  font-family: 'CustomFont', sans-serif; /* Apply custom font */
+}
+
+.toggle-button:hover {
+  background-color: var(--nav-bar);
+}
+
+.toggle-button:focus {
+  outline: none;
 }
 
 /* Apply custom font to buttons */
@@ -361,7 +380,7 @@ h3 {
 /* Leaderboard container */
 .connections-container {
   padding: 20px;
-  font-family: Georgia, sans-serif;
+  font-family: Arial, sans-serif;
   text-align: center;
 }
 
