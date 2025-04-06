@@ -1,7 +1,5 @@
 import React, { use, useState } from 'react';
 import plantIcon from '../assets/plant-icon.jpg';
-import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
-import 'react-circular-progressbar/dist/styles.css';
 import { motion } from "framer-motion";
 
 
