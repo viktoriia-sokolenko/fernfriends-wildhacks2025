@@ -1,11 +1,11 @@
 import { React, useState } from 'react';
 import { GoogleGenAI, Type } from "@google/genai";
 
-const ai = new GoogleGenAI({ apiKey: "AIzaSyBf1d4RLQAGbicb1xlCxqXJxFUfHS0oPFw" });
+const ai = new GoogleGenAI({ apiKey: "AIzaSyCnOJM8yD6-N6FIol_LyNwxFB1eClN6vt8" });
 
 const prompt = `I’d like to grow a plant in my house.
 
-Please give me three recommendations and describe how each of their characteristics relate to my preferences. The preferences are in JSON format below:
+Please give me three recommendations and describe how each of their characteristics relate to my preferences, responding with the same language as the query. The preferences are in JSON format below:
 
 `;
 
