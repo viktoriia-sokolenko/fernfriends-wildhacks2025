@@ -112,12 +112,11 @@ const EditPlant = ({plants}) => {
     const handleDelete = async(e) => {
         e.preventDefault();
         console.log('Deleting:', formData);
-        const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/plants/${formData.id}`, {
+        const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/plants/${formData.id}/${userId}`, {
             method: "DELETE",
             headers: {
-            "Content-Type": "application/json",
             Authorization: `Bearer ${token}`
-            },
+        },
         });
 
         if (!response.ok) {

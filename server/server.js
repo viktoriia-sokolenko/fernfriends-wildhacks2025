@@ -122,7 +122,6 @@ app.get('/api/users/:id', checkAuth, async (req, res) => {
           username,
           location,
           bio,
-          level,
           points,
           num_plants,
           last_points_update,
@@ -148,7 +147,7 @@ app.get('/api/users/:id', checkAuth, async (req, res) => {
 
 app.put('/api/users/:id', checkAuth, async (req, res) => {
     const { id } = req.params;
-    const { username, location, bio, level, points, num_plants, last_points_update, profile_picture } = req.body;
+    const { username, location, bio, points, num_plants, last_points_update, profile_picture } = req.body;
     try {
       const { data: existingUser, error: userFetchError } = await supabase
         .from('users')
@@ -167,7 +166,6 @@ app.put('/api/users/:id', checkAuth, async (req, res) => {
             username: username,
             location: location,
             bio: bio,
-            level: level,
             points: points,
             num_plants: num_plants,
             last_points_update: last_points_update,
@@ -187,7 +185,6 @@ app.put('/api/users/:id', checkAuth, async (req, res) => {
         username,
         location,
         bio,
-        level,
         points,
         num_plants,
         last_points_update,
@@ -199,7 +196,6 @@ app.put('/api/users/:id', checkAuth, async (req, res) => {
               username: username,
               location: location,
               bio: bio,
-              level: level,
               points: points,
               num_plants: num_plants,
               last_points_update: last_points_update,
@@ -302,11 +298,23 @@ app.delete('/api/users/:id', checkAuth, async (req, res) => {
         if (insertError) {
           throw insertError;
         }
-        const {data, error } = await supabase
+        // Get current value
+        const { data: userData, error: fetchError } = await supabase
         .from('users')
-        .update({ num_plants: supabase.raw('num_plants + 1')  // Increment num_plants by 1
-          })
+        .select('num_plants')
         .eq('id', user_id)
+        .single();
+
+        if (fetchError) {
+        console.error(fetchError);
+        return;
+        }
+
+        // Update value
+        const { data, error } = await supabase
+        .from('users')
+        .update({ num_plants: userData.num_plants + 1 })
+        .eq('id', user_id);
         if (error) {
           console.error('Error updating user plant count:', error);
           return res.status(500).json({ error: 'Failed to update user plant count' });
@@ -342,8 +350,10 @@ app.delete('/api/users/:id', checkAuth, async (req, res) => {
   });
   
   // DELETE a plant
-  app.delete('/api/plants/:id', checkAuth, async (req, res) => {
-    const id = req.params.id;
+  app.delete('/api/plants/:id/:user_id', checkAuth, async (req, res) => {
+    const { id, user_id } = req.params;
+    console.log('Deleting plant with ID:', id);
+    console.log('User ID:', user_id);
     try {
       const { error } = await supabase
         .from('plants')
@@ -351,6 +361,27 @@ app.delete('/api/users/:id', checkAuth, async (req, res) => {
         .eq('id', id);
       if (error) {
         throw error;
+      }
+      // Get current value
+      const { data: userData, error: fetchError } = await supabase
+      .from('users')
+      .select('num_plants')
+      .eq('id', user_id)
+      .single();
+
+      if (fetchError) {
+      console.error(fetchError);
+      return;
+      }
+      console.log('Current user data:', userData);
+      // Update value
+      const { data, error: updateError } = await supabase
+      .from('users')
+      .update({ num_plants: userData.num_plants - 1 })
+      .eq('id', user_id);
+      if (updateError) {
+        console.error('Error updating user plant count:', updateError);
+        return res.status(500).json({ error: 'Failed to update user plant count' });
       }
       res.status(204).send();
     } catch (error) {
