@@ -124,3 +124,10 @@
 .profile_button:hover {
   background-color: #45a501;
 }
+
+.profile-level-name {
+  font-size: 18px;
+  font-weight: bold;
+  color: #553f02;
+  margin-top: 5px;
+}
