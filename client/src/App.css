@@ -120,9 +120,62 @@ button:hover {
 }
 .plant-card {
   width: 25%;
-  box-shadow: 0 2px 4px #000001;
+  box-shadow: 0 6px 15px #F0DFAD;
   padding: 20px;
   margin: 10px;
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+  img {
+    width: 30%;
+  }
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.plant-characteristics {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-wrap: nowrap;
+  margin: 15px 0 15px 0;
+  p {
+    margin: 7px;
+  }
+}
+.plant-progress {
+  background-color: #1E555C;
+  color: white;
+  border-radius: 8px;
+  padding: 12px;
+  margin: 10px;
+  width: 90%;
+  box-shadow: 0 2px 5px #000001;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+.water-cylinder {
+  width: 20%;
+  height: 100%;
+  margin: 10px;
+}
+.cylinder-background {
+  height: 100%;
+  border-radius: 15px;
+  border: 2px solid #333;
+  position: relative;
+  overflow: hidden;
+  background-color: #e0e0e0;
+}
+.water-level {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background-color: #9BF3F0;
+  border-radius: 15px 15px 0 0;
 }
 @keyframes App-logo-spin {
   from {
