@@ -72,6 +72,7 @@ app.post("/api/register", async (req, res) => {
 
 const checkAuth = async (req, res, next) => {
     const token = req.headers.authorization?.split(" ")[1];
+    console.log("Token:", token);
     if (!token) {
         return res.status(401).json({ error: "No token provided" });
     }
@@ -201,27 +202,54 @@ app.delete('/api/users', checkAuth, async (req, res) => {
       console.error(`Error fetching plant with ID ${id}:`, error);
       return res.status(404).json({ error: 'Plant not found' });
     }
-  
+    console.log('Fetched plant data:', data);
     res.json(data);
   });
   
   
   // PUT (update or add) a plant
   app.put('/api/plants/:id', checkAuth, async (req, res) => {
-    const id = req.params.id;
-    const { name, species, water_needs, sunlight_needs, user_id } = req.body;
-  
+    let id = parseInt(req.params.id, 10);
+    if (isNaN(id)) {
+      return res.status(400).json({ error: 'Invalid ID' });
+    }
+    const { name, species, days_between_watering, last_watering, user_id, birthday } = req.body;
     const updates = {};
     if (name !== undefined) updates.name = name;
     if (species !== undefined) updates.species = species;
-    if (water_needs !== undefined) updates.water_needs = water_needs;
-    if (sunlight_needs !== undefined) updates.sunlight_needs = sunlight_needs;
+    if (days_between_watering !== undefined && days_between_watering !== '') updates.days_between_watering = days_between_watering;
+    if (last_watering !== undefined && last_watering !== '') updates.last_watering = last_watering;
     if (user_id !== undefined) updates.user_id = user_id;
+    if (birthday !== undefined && birthday !== '') updates.birthday = birthday;
   
     if (Object.keys(updates).length === 0) {
       return res.status(400).json({ error: 'No update parameters provided' });
     }
+    console.log('Updating plant with ID:', id, 'Updates:', updates);
+
+    const { data: existingPlant, error: fetchError } = await supabase
+      .from('plants')
+      .select('*')
+      .eq('id', id);
+    console.log('Existing plant data:', existingPlant);
+    if (!existingPlant || existingPlant.length === 0) {
+      console.log('Plant not found, creating new one');
+      const { data: newPlant, error: insertError } = await supabase
+        .from('plants')
+        .insert(updates)
+        .select()
+        .single();
   
+      if (insertError) {
+        console.error(`Error inserting new plant:`, insertError);
+        return res.status(500).json({ error: 'Failed to create plant' });
+      }
+  
+      console.log('Created new plant:', newPlant);
+      return res.status(201).json(newPlant);
+    }
+    console.log('Plant found, updating it');
+    updates.id = id;
     const { data, error } = await supabase
       .from('plants')
       .update(updates)
@@ -237,7 +265,8 @@ app.delete('/api/users', checkAuth, async (req, res) => {
     if (!data) {
       return res.status(404).json({ error: 'Plant not found' });
     }
-  
+    console.log('Updated plant:', data);
+
     res.json(data);
   });
   

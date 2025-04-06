@@ -25,8 +25,10 @@ export const AuthProvider = ({ children }) => {
         if (savedToken) {
             setToken(savedToken);
         }
-        },
-         []);
+        if (token) {
+            localStorage.setItem("access_token", token);
+        }},
+        []);
 
     return (
         <AuthContext.Provider value={{ token, setToken, userId, setUserId, handleLogout}}>

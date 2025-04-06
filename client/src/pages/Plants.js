@@ -17,6 +17,15 @@ const Plants = () => {
       const fetchPlants = async () => {
         try {
           console.log('Fetching plants for user:', userId);
+          console.log('Token:', token);
+          if (!token){
+            token = localStorage.getItem('access_token');
+            console.log('Token from localStorage:', token);
+          }
+          if (!token) {
+            console.error('No token found');
+            return;
+        }
           const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/plants/${userId}`, {
             method: 'GET',
             headers: {
@@ -29,7 +38,7 @@ const Plants = () => {
           }
 
           const data = await response.json();
-          setPlants(data.plants || []);
+          setPlants(data || []);
         } catch (error) {
           console.error('Error fetching plants:', error);
         }
@@ -37,7 +46,7 @@ const Plants = () => {
       if (token) {
         fetchPlants();
       }
-    }, [token]);
+    }, [token, editMode, userId]);
     return (
       <div className='section'>
       <div className="headline-button">

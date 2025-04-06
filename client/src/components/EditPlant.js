@@ -1,17 +1,29 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../AuthContext';
+import BigInt from 'big-integer';
 
 const EditPlant = ({plants}) => {
+    const formatDate = (date) => {
+        const new_date = new Date(date);
+        const formattedDate = new_date.toLocaleDateString('en-CA');
+        return formattedDate;
+    };
+    const { userId, token } = useAuth();
+    console.log("token from context:", token);
+    const newPlantId = BigInt(Math.floor(Math.random() * Number.MAX_SAFE_INTEGER));
+    const navigate = useNavigate();
     const [plant, setPlant] = useState({
-        id: 0,
+        id: newPlantId,
         name: '',
         species: '',
         birthday: '',
-        user_id: '',
+        user_id: userId || '',
         days_between_watering: '',
         last_watering: '',
     });
     const [formData, setFormData] = useState({
-        id: plant.id || 0,
+        id: plant.id || newPlantId,
         name: plant.name || '',
         species: plant.species || '',
         birthday: plant.birthday || '',
@@ -22,20 +34,20 @@ const EditPlant = ({plants}) => {
     const selectPlant = (e) => {
         if (e.target.value === 'new') {
             setPlant({
-                id: 0,
+                id: newPlantId,
                 name: '',
                 species: '',
                 birthday: '',
-                user_id: '',
+                user_id: userId || '',
                 days_between_watering: '',
                 last_watering: '',
             });
             setFormData({
-                id: 0,
+                id: newPlantId,
                 name: '',
                 species: '',
                 birthday: '',
-                user_id: '',
+                user_id: userId || '',
                 days_between_watering: '',
                 last_watering: '',
             });
@@ -43,10 +55,21 @@ const EditPlant = ({plants}) => {
         }
         else {
             const selectedPlant = plants.find(plant => plant.id === Number(e.target.value));
-            setPlant(selectedPlant);
-            setFormData(selectedPlant);
+            const formattedBirthday = formatDate(selectedPlant.birthday);
+            const formattedLastWatering = formatDate(selectedPlant.last_watering);
+            setFormData({
+                ...selectedPlant,
+                birthday: formattedBirthday,
+                last_watering: formattedLastWatering,
+            });
+            setPlant({
+                ...selectedPlant,
+                birthday: formattedBirthday,
+                last_watering: formattedLastWatering,
+            });
             setPlantSelected(true);
         }
+        console.log('Form data:', formData);
     }
     const [plantSelected, setPlantSelected] = useState(false);
     const handleChange = (e) => {
@@ -54,17 +77,57 @@ const EditPlant = ({plants}) => {
         setFormData({ ...formData, [name]: value });
     };
 
-    const handleSubmit = (e) => {
+    const editPlantData = async(e) => {
         e.preventDefault();
         console.log('Saving:', formData);
+        if (!token) {
+            token = localStorage.getItem('access_token');
+            console.log('Token from localStorage:', token);
+        }
+        if (!token) {
+            console.error('No token found');
+            return;
+        }
+        const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/plants/${formData.id}`, {
+            method: "PUT",
+            headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify(formData),
+        });
+
+        if (!response.ok) {
+            throw new Error("Failed to update plant");
+        }
+
+        const data = await response.json();
+        console.log("Plant updated successfully:", data);
+        navigate(`/plants`);
     };
     const handleReset = () => {
         setFormData(plant);
         setPlantSelected(false);
     };
+    const handleDelete = async(e) => {
+        e.preventDefault();
+        console.log('Deleting:', formData);
+        const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/plants/${formData.id}`, {
+            method: "DELETE",
+            headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+            },
+        });
 
+        if (!response.ok) {
+            throw new Error("Failed to delete plant");
+        }
+        console.log("Plant deleted successfully");
+        window.location = `/plants`;
+    }
     return (
-        <form onSubmit={handleSubmit}>
+        <form>
             <div className="edit-form">
                 <select onChange={selectPlant} value={formData.id}>
                     <option value="new">Add New</option>
@@ -120,10 +183,10 @@ const EditPlant = ({plants}) => {
                     />
                 </label>
                 <div className='row'>
-                    <button type="submit">Save</button>
+                    <button onClick={editPlantData}>Save</button>
                     <button type="button" onClick={handleReset}>Reset</button>
                     {plantSelected && (
-                        <button type="button">Delete plant</button>
+                        <button type="button" onClick={handleDelete}>Delete plant</button>
                     )}
                 </div>
             </div>

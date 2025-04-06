@@ -1,19 +1,23 @@
 import React, { use, useState } from 'react';
 import plantIcon from '../assets/plant-icon.jpg';
 import { motion } from "framer-motion";
-
-
+import { useAuth } from '../AuthContext';
+import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 const Plant = ({plant}) => {
-    const [plantInfo, setPlantInfo] = useState({
-        id: plant.id || 0,
-        name: plant.name || '',
-        species: plant.species || '',
-        birthday: plant.birthday || '',
-        user_id: plant.user_id || '',
-        days_between_watering: plant.days_between_watering || '',
-        last_watering: plant.last_watering || '',
-    });
+    const formatDate = (date) => {
+        const new_date = new Date(date);
+        const formattedDate = new_date.toLocaleDateString('en-US', {
+            month: 'long',
+            day: 'numeric',
+            year: 'numeric'
+          });
+        return formattedDate;
+    };
+    const { token } = useAuth();
+    const navigate = useNavigate();
+    const [last_watering, setLastWatering] = useState(plant.last_watering || '');
     const calculateDaysUntilNextWatering = (lastWateringDate, daysBetweenWatering) => {
         const lastWatering = new Date(lastWateringDate);
         const today = new Date();
@@ -35,24 +39,51 @@ const Plant = ({plant}) => {
         return ageInDays;
     }
     const [wateredToday, setWateredToday] = useState(false);
-    const handleWateredToday = (watered) => {
+    const handleWateredToday = async(watered) => {
         setWateredToday(watered);
         if (watered) {
             const today = new Date();
-            const updatedPlant = {
-                ...plantInfo,
-                last_watering: today.toISOString().split('T')[0],
-            };
-            setPlantInfo(updatedPlant);
+            setLastWatering(today);
+            if (!token) {
+                token = localStorage.getItem('access_token');
+                console.log('Token from localStorage:', token);
+            }
+            if (!token) {
+                console.error('No token found');
+                return;
+            }
+            const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/plants/${plant.id}`, {
+                method: "PUT",
+                headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify({last_watering: today}),
+            });
+    
+            if (!response.ok) {
+                throw new Error("Failed to update watering date");
+            }
+    
+            const data = await response.json();
+            console.log("Watering date updated successfully:", data);
+            navigate(`/plants`);
         }
     }
+    useEffect(() => {
+        const today = new Date().toDateString();
+        const lastWateringDate = new Date(last_watering).toDateString();
+        if (today === lastWateringDate) {
+            setWateredToday(true);
+        }
+    }, [last_watering]);
     return (
         <div className="plant-card">
             <motion.img
                 src={plantIcon}
                 alt="plant"
                 animate={{
-                    filter: `grayscale(${calculateWateringPercentage(plant.last_watering, plant.days_between_watering) / 120})`,
+                    filter: `grayscale(${calculateWateringPercentage(last_watering, plant.days_between_watering) / 120})`,
                 }}
                 transition={{ duration: 0.5 }}
                 style={{ width: 80 }}
@@ -62,15 +93,15 @@ const Plant = ({plant}) => {
             <div className='plant-characteristics'>
             <p><strong>🎂 Age: </strong>
             {calculatePlantAgeInDays(plant.birthday)} days </p>
-            <p><strong>💧 Water in {calculateDaysUntilNextWatering(plant.last_watering, plant.days_between_watering)} days </strong></p>
+            <p><strong>💧 Water in {calculateDaysUntilNextWatering(last_watering, plant.days_between_watering)} days </strong></p>
             </div>
             <div className="water-cylinder">
                 <motion.div className="cylinder-background">
                 <motion.div
                     className="water-level"
                     animate={{
-                    height: `${100 - calculateWateringPercentage(plant.last_watering, plant.days_between_watering)}%`,
-                    backgroundColor: calculateWateringPercentage(plant.last_watering, plant.days_between_watering) < 50 ? '#9BF3F0' : '#f44336', // Green if healthy, Red if needs water
+                    height: `${100 - calculateWateringPercentage(last_watering, plant.days_between_watering)}%`,
+                    backgroundColor: calculateWateringPercentage(last_watering, plant.days_between_watering) < 50 ? '#9BF3F0' : '#f44336', // Green if healthy, Red if needs water
                     }}
                     transition={{ duration: 1 }}
                 />
@@ -79,17 +110,23 @@ const Plant = ({plant}) => {
             </div>
             <div className='plant-characteristics'>
                 <p>Species: {plant.species}</p>
-                <p>Birthday: {plant.birthday}</p>
+                <p>Birthday: {formatDate(plant.birthday)}</p>
                 <p>Needs watering every {plant.days_between_watering} days</p>
-                <p>Last Watering: {plant.last_watering}</p>
+                <p>Last Watering: {formatDate(last_watering)}</p>
                 <motion.div
                     className="droplet"
                     initial={{ scaleY: 1 }}
-                    animate={{ scaleY: 1 - (calculateWateringPercentage(plant.last_watering, plant.days_between_watering) / 100) }}
+                    animate={{ scaleY: 1 - (calculateWateringPercentage(last_watering, plant.days_between_watering) / 100) }}
                     transition={{ duration: 0.5 }}
                 />
             </div>
-            <button onClick={handleWateredToday}>{wateredToday ? 'Already Watered Today' : 'Just Watered'}</button>
+            <button 
+                onClick={() => handleWateredToday(true)} 
+                disabled={wateredToday}
+                style={{ cursor: wateredToday ? 'not-allowed' : 'pointer'}}
+            >
+                {wateredToday ? 'Already Watered Today' : 'Just Watered'}
+            </button>
         </div>
     )
 };

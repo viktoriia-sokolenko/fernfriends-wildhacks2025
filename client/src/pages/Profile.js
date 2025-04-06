@@ -77,9 +77,9 @@ const Profile = () => {
     }
   }, [user.last_points_update]); // Run this effect whenever last_points_update changes
 
-  if (editMode) {
-    // Render only the edit form when in edit mode
-    return (
+  // Render the profile view when not in edit mode
+  return (
+    editMode ? (
       <div className="profile-container">
         <h2 className="form-title">Edit Profile</h2>
         <form onSubmit={handleSubmit} className="profile-form">
@@ -132,12 +132,9 @@ const Profile = () => {
           </button>
         </form>
       </div>
-    );
-  }
-
-  // Render the profile view when not in edit mode
-  return (
-    <div className="profile-container">
+    )
+    : (
+      <div className="profile-container">
       <div className="profile-card">
         <img
           src={user.profilePicture}
@@ -162,7 +159,8 @@ const Profile = () => {
         </button>
       </div>
     </div>
-  );
+    )
+    );
 };
 
 export default Profile;
