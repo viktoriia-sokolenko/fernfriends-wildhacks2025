@@ -8,6 +8,7 @@ function App() {
     boostProductivity: false,
     healthierEnvironment: false,
     moodEnhancement: false,
+    connectWithOthers: false, // New toggle for connecting with plant lovers
   });
 
   const toggleSection = (section) => {
@@ -105,6 +106,21 @@ function App() {
               Surrounding yourself with greenery can lift your mood and provide
               daily joy. Taking care of your plants means taking care of
               yourself!
+            </p>
+          )}
+        </div>
+
+        {/* Connect with Others Section */}
+        <div className="characteristic">
+          <button
+            className="toggle-button"
+            onClick={() => toggleSection('connectWithOthers')}
+          >
+            🌿 Connect with Other Plant Lovers {visibleSections.connectWithOthers ? '▲' : '▼'}
+          </button>
+          {visibleSections.connectWithOthers && (
+            <p>
+              Our platform allows you to connect with fellow plant enthusiasts! You can find them on the leaderboard, search by location, and connect to share tips, tricks, and plant care advice.
             </p>
           )}
         </div>
