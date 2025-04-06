@@ -44,6 +44,16 @@ app.post("/api/login", async (req, res) => {
 
 app.post("/api/register", async (req, res) => {
     const { email, password, username } = req.body;
+    if (!email || !password || !username) {
+        return res.status(400).json({ error: "All fields are required" });
+    }
+    if (password.length < 6) {
+        return res.status(400).json({ error: "Password must be at least 6 characters long" });
+    }
+    if (username.length < 3) {
+        return res.status(400).json({ error: "Username must be at least 3 characters long" });
+    }
+    console.log("Registering user:", { email, password, username });
     try {
         const { data, error } = await supabase.auth.signUp({
         email,
