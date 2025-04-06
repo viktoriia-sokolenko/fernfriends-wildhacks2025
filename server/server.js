@@ -302,6 +302,15 @@ app.delete('/api/users/:id', checkAuth, async (req, res) => {
         if (insertError) {
           throw insertError;
         }
+        const {data, error } = await supabase
+        .from('users')
+        .update({ num_plants: supabase.raw('num_plants + 1')  // Increment num_plants by 1
+          })
+        .eq('id', user_id)
+        if (error) {
+          console.error('Error updating user plant count:', error);
+          return res.status(500).json({ error: 'Failed to update user plant count' });
+        }
 
         console.log('Created new plant:', newPlant);
         return res.status(201).json(newPlant);
