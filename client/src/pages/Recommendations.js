@@ -53,7 +53,7 @@ function Recommendations() {
       model: "gemini-2.0-flash",
       contents: prompt + JSON.stringify(formData),
       config: {
-        systemInstruction: "You are a expert gardener with a broad knowledge of various plants used for indoor decor.",
+        systemInstruction: "You are a expert gardener with a broad knowledge of various indoor plants.",
         responseMimeType: 'application/json',
         responseSchema: {
             type: Type.ARRAY,
