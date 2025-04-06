@@ -152,6 +152,16 @@ const Profile = () => {
     fetchUserData();
   }, [token, userId]);
 
+    // Function to format the 'created_at' date
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
+  };
+  
   return (
     editMode ? (
       <div className="profile-container">
@@ -186,7 +196,7 @@ const Profile = () => {
           <p className="profile-level-name">{name}</p>
           <p className="profile-bio">{user.bio}</p>
           <p className="profile-location">{user.location}</p>
-          <p className="profile-date">Joined: {new Date(user.created_at).toLocaleDateString()}</p>
+          <p className="profile-date">Joined: {formatDate(user.created_at)}</p> {/* Updated to use formatDate */}
           <div className="profile-stats">
             <p><strong>Level:</strong> {level}</p>
             <p><strong>Points:</strong> {user.points}</p>
