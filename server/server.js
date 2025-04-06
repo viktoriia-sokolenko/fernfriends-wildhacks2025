@@ -72,7 +72,6 @@ app.post("/api/register", async (req, res) => {
 
 const checkAuth = async (req, res, next) => {
     const token = req.headers.authorization?.split(" ")[1];
-    console.log("Token:", token);
     if (!token) {
         return res.status(401).json({ error: "No token provided" });
     }
@@ -103,6 +102,7 @@ app.get('/api/users', checkAuth, async (req, res) => {
 
 app.get('/api/users/:id', checkAuth, async (req, res) => {
     const { id } = req.params;
+    console.log('Fetching user with ID:', id);
     try {
         const { data, error } = await supabase
         .from('users')
@@ -114,7 +114,9 @@ app.get('/api/users/:id', checkAuth, async (req, res) => {
           bio,
           level,
           points,
-          num_plants
+          num_plants,
+          last_points_update,
+          profile_picture
       `)
         .eq('id', id)
         .single();
@@ -122,10 +124,13 @@ app.get('/api/users/:id', checkAuth, async (req, res) => {
             throw error;
         }
         if (!data) {
+            console.log('User not found with ID:', id);
             return res.status(404).send('User not found');
         }
+        console.log('Fetched user data:', data);
         res.json(data);
     } catch (error) {
+        console.error('Error fetching user:', error);
         res.status(500).send('Server Error');
     }
 });
@@ -133,26 +138,58 @@ app.get('/api/users/:id', checkAuth, async (req, res) => {
 
 app.put('/api/users/:id', checkAuth, async (req, res) => {
     const { id } = req.params;
-    const { created_at, username, location, bio, level, points, num_plants } = req.body;
+    const { username, location, bio, level, points, num_plants, last_points_update, profile_picture } = req.body;
     try {
-        const { data, error } = await supabase
-            .from('users')
-            .upsert({
-                created_at: created_at,
-                username: username,
-                location: location,
-                bio: bio,
-                level: level,
-                points: points,
-                num_plants: num_plants
-            })
-            .eq('id', id)
-            .single();
+      const { data: existingUser, error: userFetchError } = await supabase
+        .from('users')
+        .select('*')
+        .eq('id', id);
+      if (userFetchError) {
+        throw userFetchError;
+      }
 
-        if (error) {
-            throw error;
+      if (!existingUser || existingUser.length === 0) {
+        console.log('User not found with such id:', id);
+        const { data: newUser, error: insertError } = await supabase
+          .from('users')
+          .insert({
+            id: id,
+            username: username,
+            location: location,
+            bio: bio,
+            level: level,
+            points: points,
+            num_plants: num_plants,
+            last_points_update: last_points_update,
+            profile_picture: profile_picture
+          })
+          .select()
+          .single();
+        if (insertError) {
+            console.error('Error inserting new user:', insertError);
+            return res.status(500).json({ error: 'Failed to create user' });
         }
-        res.json({ message: "Profile updated successfully", data });
+        console.log('Created new user:', newUser);
+        return res.status(201).json(newUser);
+      }
+      const { data, error } = await supabase
+          .from('users')
+          .update({
+              username: username,
+              location: location,
+              bio: bio,
+              level: level,
+              points: points,
+              num_plants: num_plants,
+              last_points_update: last_points_update
+          })
+          .eq('id', id)
+          .single();
+
+      if (error) {
+          throw error;
+      }
+      res.json({ message: "Profile updated successfully", data });
     } catch (error) {
         console.error('Error updating profile:', error);
         res.status(500).send('Server Error');
@@ -160,8 +197,8 @@ app.put('/api/users/:id', checkAuth, async (req, res) => {
 });
 
 
-app.delete('/api/users', checkAuth, async (req, res) => {
-    const { user_id } = req.body;
+app.delete('/api/users/:id', checkAuth, async (req, res) => {
+    const { user_id } = req.params.id;
     try {
         const { data, error } = await supabase
         .from('users')
@@ -176,34 +213,27 @@ app.delete('/api/users', checkAuth, async (req, res) => {
 
   // --- Plant API Endpoints ---
   
-  // GET all plants
-  app.get('/api/plants', checkAuth, async (req, res) => { // id, birthday, userid, days between watering plants/id
-    const { data, error } = await supabase
-      .from('plants')
-      .select('*');
-  
-    if (error) {
-      console.error('Error fetching plants:', error);
-      return res.status(500).json({ error: 'Failed to fetch plants' });
-    }
-  
-    res.json(data);
-  });
-  
   // GET all plants for a specific user
   app.get('/api/plants/:id', checkAuth, async (req, res) => {
     const id = req.params.id;
     console.log('Fetching plant for user:', id);
-    const { data, error } = await supabase
-      .from('plants')
-      .select('*')
-      .eq('user_id', id);  
-    if (error) {
-      console.error(`Error fetching plant with ID ${id}:`, error);
-      return res.status(404).json({ error: 'Plant not found' });
+    try {
+      const { data, error } = await supabase
+        .from('plants')
+        .select('*')
+        .eq('user_id', id);
+      if (error) {
+        throw error;
+      }
+      if (!data || data.length === 0) {
+        return res.status(404).json({ error: 'Plant not found' });
+      }
+      console.log('Fetched plant data:', data);
+      res.json(data);
+    } catch (error) {
+      console.error(`Error fetching plants for user ID ${id}:`, error);
+      res.status(500).json({ error: 'Server Error' });
     }
-    console.log('Fetched plant data:', data);
-    res.json(data);
   });
   
   
@@ -227,63 +257,74 @@ app.delete('/api/users', checkAuth, async (req, res) => {
     }
     console.log('Updating plant with ID:', id, 'Updates:', updates);
 
-    const { data: existingPlant, error: fetchError } = await supabase
-      .from('plants')
-      .select('*')
-      .eq('id', id);
-    console.log('Existing plant data:', existingPlant);
-    if (!existingPlant || existingPlant.length === 0) {
-      console.log('Plant not found, creating new one');
-      const { data: newPlant, error: insertError } = await supabase
+    try {
+      const { data: existingPlant, error: fetchError } = await supabase
         .from('plants')
-        .insert(updates)
+        .select('*')
+        .eq('id', id);
+      console.log('Existing plant data:', existingPlant);
+
+      if (fetchError) {
+        throw fetchError;
+      }
+
+      if (!existingPlant || existingPlant.length === 0) {
+        console.log('Plant not found, creating new one');
+        const { data: newPlant, error: insertError } = await supabase
+          .from('plants')
+          .insert(updates)
+          .select()
+          .single();
+
+        if (insertError) {
+          throw insertError;
+        }
+
+        console.log('Created new plant:', newPlant);
+        return res.status(201).json(newPlant);
+      }
+
+      console.log('Plant found, updating it');
+      updates.id = id;
+      const { data, error: updateError } = await supabase
+        .from('plants')
+        .update(updates)
+        .eq('id', id)
         .select()
         .single();
-  
-      if (insertError) {
-        console.error(`Error inserting new plant:`, insertError);
-        return res.status(500).json({ error: 'Failed to create plant' });
-      }
-  
-      console.log('Created new plant:', newPlant);
-      return res.status(201).json(newPlant);
-    }
-    console.log('Plant found, updating it');
-    updates.id = id;
-    const { data, error } = await supabase
-      .from('plants')
-      .update(updates)
-      .eq('id', id)
-      .select()
-      .single();
-  
-    if (error) {
-      console.error(`Error updating plant with ID ${id}:`, error);
-      return res.status(500).json({ error: 'Failed to update plant' });
-    }
-  
-    if (!data) {
-      return res.status(404).json({ error: 'Plant not found' });
-    }
-    console.log('Updated plant:', data);
 
-    res.json(data);
+      if (updateError) {
+        throw updateError;
+      }
+
+      if (!data) {
+        return res.status(404).json({ error: 'Plant not found' });
+      }
+
+      console.log('Updated plant:', data);
+      res.json(data);
+    } catch (error) {
+      console.error(`Error processing plant with ID ${id}:`, error);
+      res.status(500).json({ error: 'Server Error' });
+    }
   });
   
   // DELETE a plant
   app.delete('/api/plants/:id', checkAuth, async (req, res) => {
     const id = req.params.id;
-    const { error } = await supabase
-      .from('plants')
-      .delete()
-      .eq('id', id);
-  
-    if (error) {
+    try {
+      const { error } = await supabase
+        .from('plants')
+        .delete()
+        .eq('id', id);
+      if (error) {
+        throw error;
+      }
+      res.status(204).send();
+    } catch (error) {
       console.error(`Error deleting plant with ID ${id}:`, error);
-      return res.status(500).json({ error: 'Failed to delete plant' });
+      res.status(500).json({ error: 'Server error' });
     }
-  
-    res.status(204).send();
   });
 
   app.listen(PORT, () => {
