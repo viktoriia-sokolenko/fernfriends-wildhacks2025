@@ -142,10 +142,7 @@ const Profile = () => {
         <div className="form-group">
           <label htmlFor="location">Location:</label>
           <input
-<<<<<<< Updated upstream
             type="text"
-=======
->>>>>>> Stashed changes
             id="location"
             name="location"
             value={formData.location}
