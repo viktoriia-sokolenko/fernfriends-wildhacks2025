@@ -1,5 +1,18 @@
+:root {
+  --nav-bar: #3d8641; /*3d8d01*/
+  --button: #3d8d01;
+  --secondary: #ede0d4;
+  --accent: #168aad;
+  --text-dark: #333333;
+  --text-light: #FFF6ED;
+  --background: #e0e0e0;
+  --shadow: #FAEDCD;
+  --border: #333333;
+}
+
 .App {
   text-align: center;
+  background-color: var(--background); /* Use palette color */
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -9,7 +22,7 @@
 }
 
 button {
-  background-color: #367724;
+  background-color: var(--button); /* Use button color */
   color: white;
   border: none;
   padding: 10px 20px;
@@ -17,26 +30,36 @@ button {
   cursor: pointer;
   border-radius: 5px;
   margin: 10px;
+  transition: transform 0.1s ease; /* Smooth transition for movement */
 }
+
+button:hover {
+  background-color: var(--button); /* Use button color */
+}
+
+button:active {
+  transform: translateY(3px); /* Move the button down slightly */
+  box-shadow: 0 2px 4px var(--shadow); /* Adjust shadow for pressed effect */
+}
+
 h3 {
-  color: #009B72;
+  color: var(--text-dark); /* Use text dark color */
   font-size: 20px;
   font-weight: bold;
 }
-button:hover {
-  background-color: #367724;
-}
+
 .navbar {
   display: flex;
   justify-content: space-between;
   width: 100%;
   padding: 20px;
-  background-color: #367724;
+  background-color: var(--nav-bar); /* Use nav bar color */
 }
+
 .sections {
   height: 100%;
   width: 100%;
-  display:flex;
+  display: flex;
   flex-direction: row;
   justify-content: right;
   align-items: center;
@@ -45,14 +68,15 @@ button:hover {
     list-style-type: none;
     text-align: center;
     padding: 0 20px;
-    }
+  }
   a {
-    color: white;
+    color: var(--text-light); /* Use light text color */
     text-decoration: none;
     font-size: 20px;
     font-weight: bold;
   }
 }
+
 .edit-form {
   display: flex;
   flex-direction: column;
@@ -60,34 +84,35 @@ button:hover {
   justify-content: center;
   margin-top: 20px;
   padding: 20px;
-  border: 1px, solid #ccc;
+  border: 1px solid var(--border); /* Use border color */
   border-radius: 5px;
-  box-shadow: 0 2px 4px #000001;
-  background-color: #f9f9f9;
+  box-shadow: 0 2px 4px var(--shadow); /* Use shadow color */
+  background-color: var(--secondary); /* Use secondary color */
   width: 50%;
   input {
     margin: 10px;
     padding: 10px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--border);
     border-radius: 5px;
   }
   select {
     padding: 10px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--border);
     border-radius: 5px;
     width: 200px;
   }
   textarea {
     margin: 10px;
     padding: 10px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--border);
     border-radius: 5px;
     width: 60%;
-    }
+  }
   label {
     width: 100%;
   }
 }
+
 .row {
   display: flex;
   justify-content: space-between;
@@ -95,6 +120,7 @@ button:hover {
   align-items: center;
   margin-bottom: 10px;
 }
+
 .headline-button {
   display: flex;
   justify-content: left;
@@ -104,19 +130,22 @@ button:hover {
     width: 10%;
   }
 }
+
 .section {
   margin: 20px;
   padding: 20px;
 }
+
 .plants-list {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: space-between;
 }
+
 .plant-card {
   width: 25%;
-  box-shadow: 0 6px 15px #F0DFAD;
+  box-shadow: 0 6px 15px var(--shadow);
   padding: 20px;
   margin: 10px;
   border-bottom-left-radius: 15px;
@@ -129,9 +158,10 @@ button:hover {
   justify-content: center;
   align-items: center;
 }
+
 .plant-card-left {
   width: 25%;
-  box-shadow: 0 6px 15px #F0DFAD;
+  box-shadow: 0 6px 15px var(--shadow);
   padding: 20px;
   margin: 10px;
   border-bottom-left-radius: 15px;
@@ -148,6 +178,7 @@ button:hover {
     width: 100%;
   }
 }
+
 .plant-characteristics {
   display: flex;
   flex-direction: column;
@@ -159,39 +190,44 @@ button:hover {
     margin: 7px;
   }
 }
+
 .plant-progress {
-  background-color: #367724;
+  background-color: var(--nav-bar); /* Use plant-progress color */
   color: white;
   border-radius: 8px;
   padding: 12px;
   margin: 10px;
   width: 90%;
-  box-shadow: 0 2px 5px #000001;
+  box-shadow: 0 2px 5px var(--shadow);
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
 }
+
 .water-cylinder {
   width: 20%;
   height: 100%;
   margin: 10px;
 }
+
 .cylinder-background {
   height: 100%;
   border-radius: 15px;
-  border: 2px solid #333;
+  border: 2px solid var(--border);
   position: relative;
   overflow: hidden;
-  background-color: #e0e0e0;
+  background-color: var(--background); /* Use background color */
 }
+
 .water-level {
   position: absolute;
   bottom: 0;
   width: 100%;
-  background-color: #7DDFC0;
+  background-color: var(--accent); /* Use accent color */
   border-radius: 15px 15px 0 0;
 }
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
