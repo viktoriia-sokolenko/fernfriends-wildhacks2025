@@ -5,21 +5,21 @@ import './Profile.css';
 
 const Profile = () => {
   const [user, setUser] = useState({
-    created_at: '2025-04-05 19:01:47.79967+00',
-    username: 'April Wang',
-    location: 'Evanston, IL, USA',
-    bio: '!!!',
-    points: 10,
+    username: '',
+    bio: '',
+    location: '',
     profile_picture: 'https://www.pixcrafter.com/wp-content/uploads/2024/03/cartoon-style-indoor-plant-vector-illustration.jpg',
-    num_plants: 12,
-    last_points_update: '2025-03-29T19:01:47.799Z', // Last time points were updated
+    points: 0,
+    num_plants: 0,
+    created_at: '',
+    last_points_update: '',
   });
 
   const [formData, setFormData] = useState({
-    username: user.username,
-    bio: user.bio,
-    location: user.location,
-    profile_picture: user.profile_picture,
+    username: user?.username || '',
+    bio: user?.bio || '',
+    location: user?.location || '',
+    profile_picture: user?.profile_picture || '',
   });
 
   const [editMode, setEditMode] = useState(false);

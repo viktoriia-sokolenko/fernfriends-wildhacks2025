@@ -182,6 +182,17 @@ app.put('/api/users/:id', checkAuth, async (req, res) => {
         console.log('Created new user:', newUser);
         return res.status(201).json(newUser);
       }
+      console.log('User found, updating it');
+      console.log('Updating user with ID:', id, 'Updates:', {
+        username,
+        location,
+        bio,
+        level,
+        points,
+        num_plants,
+        last_points_update,
+        profile_picture
+      });
       const { data, error } = await supabase
           .from('users')
           .update({
@@ -191,7 +202,8 @@ app.put('/api/users/:id', checkAuth, async (req, res) => {
               level: level,
               points: points,
               num_plants: num_plants,
-              last_points_update: last_points_update
+              last_points_update: last_points_update,
+              profile_picture: profile_picture
           })
           .eq('id', id)
           .single();
