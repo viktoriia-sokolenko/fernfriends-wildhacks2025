@@ -6,11 +6,7 @@ import { useEffect } from 'react';
 
 
 const Plants = () => {
-    const [plants, setPlants] = useState([
-      { id: 1, name: 'Fern', species: 'Fern', birthday: '2023-01-01', user_id: '1', days_between_watering: '7', last_watering: '2025-04-01' },
-      { id: 2, name: 'Cactus', species: 'Cactus', birthday: '2023-02-01', user_id: '1', days_between_watering: '14', last_watering: '2025-04-03' },
-      { id: 3, name: 'Bamboo', species: 'Orchid', birthday: '2023-03-01', user_id: '1', days_between_watering: '4', last_watering: '2025-03-29' },
-    ]);
+    const [plants, setPlants] = useState([]);
     const [editMode, setEditMode] = useState(false);
     const { userId, token } = useAuth();
     useEffect(() => {
@@ -61,15 +57,19 @@ const Plants = () => {
         </>
       ) : (
         <div className='plants-container'>
-        <div className="plants-list">
-          {plants.map((plant) => (
-          <Plant plant={plant} key={plant.id} />
-          ))}
-        </div>
-        </div>
+        {plants.length === 0 ? (
+          <h2>No plants found or your plants are still loading ... </h2>
+        ) : (
+          <div className="plants-list">
+            {plants.map((plant) => (
+              <Plant plant={plant} key={plant.id} />
+            ))}
+          </div>
       )}
       </div>
-    );
-  };
+      )}
+    </div>
+  );
+}
 
   export default Plants;
