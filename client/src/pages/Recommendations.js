@@ -1,7 +1,7 @@
 import { React, useState } from 'react';
 import { GoogleGenAI, Type } from "@google/genai";
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_KEY });
+const ai = new GoogleGenAI({ apiKey: process.env.REACT_APP_GEMINI_KEY });
 
 const prompt = `I’d like to grow a plant in my house.
 
