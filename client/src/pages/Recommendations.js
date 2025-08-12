@@ -45,7 +45,7 @@ function Recommendations() {
     pets: 'one cat',
     temperature: '60-65°F',
     humidity: 'Dry air',
-    extra: 'Ming loves flowers',
+    extra: 'I like plants that have interesting leaves or flowers',
   });
 
   const [recommended, setRecommended] = useState([
@@ -196,7 +196,7 @@ function Recommendations() {
         />
       </label>
       <label>
-        Anything else I should know?
+        Anything else I should know? (i.e., specific plant preferences)
         <textarea
           name="extra"
           value={formData.extra}
@@ -212,6 +212,7 @@ function Recommendations() {
   <div className='section'>
     <div className='plants-container'>
       <div className="plants-list">
+        {recommended.length === 0 && <p>Your new plants are just a few clicks away...</p>}
         {recommended.map((plant) => (
           <PlantCard plant={plant} key={plant.name} />
           ))}

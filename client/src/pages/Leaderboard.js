@@ -99,7 +99,7 @@ const Leaderboard = () => {
                 ) : (
                   <button
                     className="connect-button"
-                    onClick={() => alert(user.contact_info)}
+                    onClick={() => alert(`${user.username}'s contact info: ${user.contact_info}`)}
                   >
                     Connect
                   </button>

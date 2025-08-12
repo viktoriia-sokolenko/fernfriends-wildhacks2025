@@ -11,6 +11,7 @@ const EditPlant = ({plants}) => {
     };
     const { userId, token } = useAuth();
     const newPlantId = BigInt(Math.floor(Math.random() * Number.MAX_SAFE_INTEGER));
+    const [message, setMessage] = useState('');
     const navigate = useNavigate();
     const [plant, setPlant] = useState({
         id: newPlantId,
@@ -31,6 +32,7 @@ const EditPlant = ({plants}) => {
         last_watering: plant.last_watering || '',
     });
     const selectPlant = (e) => {
+        setMessage('');
         if (e.target.value === 'new') {
             setPlant({
                 id: newPlantId,
@@ -71,7 +73,19 @@ const EditPlant = ({plants}) => {
     }
     const [plantSelected, setPlantSelected] = useState(false);
     const handleChange = (e) => {
+        setMessage('');
         const { name, value } = e.target;
+        if (name === "last_watering") {
+            const today = new Date();
+            const inputDate = new Date(value);
+            const todayMidnight = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+            const inputMidnight = new Date(inputDate.getFullYear(), inputDate.getMonth(), inputDate.getDate());
+
+            if (inputMidnight > todayMidnight) {
+                setMessage("Last watering date cannot be in the future.");
+                return;
+            }
+        }
         setFormData({ ...formData, [name]: value });
     };
 
@@ -94,11 +108,12 @@ const EditPlant = ({plants}) => {
         });
 
         if (!response.ok) {
+            setMessage("Failed to update plant. Please try again.");
             throw new Error("Failed to update plant");
         }
 
         const data = await response.json();
-        console.log("Plant updated successfully:", data);
+        setMessage("Plant updated successfully!");
         navigate(`/plants`);
     };
     const handleReset = () => {
@@ -117,6 +132,7 @@ const EditPlant = ({plants}) => {
         if (!response.ok) {
             throw new Error("Failed to delete plant");
         }
+        setMessage("Plant deleted successfully!");
         window.location = `/plants`;
     }
     return (
@@ -182,6 +198,7 @@ const EditPlant = ({plants}) => {
                         <button type="button" onClick={handleDelete}>Delete plant</button>
                     )}
                 </div>
+                {message && <p>{message}</p>}
             </div>
         </form>
     );

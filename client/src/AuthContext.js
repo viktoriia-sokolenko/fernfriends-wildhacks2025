@@ -36,10 +36,10 @@ export const AuthProvider = ({ children }) => {
 
     // Function to determine the level, name, and emoji based on points
     const getLevelInfo = (points) => {
-        if (points >= 750) return { level: 25, name: 'Canopy 🌳' };
-        if (points >= 500) return { level: 20, name: 'Bloom 🌸' };
-        if (points >= 300) return { level: 15, name: 'Bud 🌼' };
-        if (points >= 150) return { level: 10, name: 'Leaf 🍃' };
+        if (points >= 300) return { level: 25, name: 'Canopy 🌳' };
+        if (points >= 200) return { level: 20, name: 'Bloom 🌸' };
+        if (points >= 150) return { level: 15, name: 'Bud 🌼' };
+        if (points >= 100) return { level: 10, name: 'Leaf 🍃' };
         if (points >= 50) return { level: 5, name: 'Seedling 🌿' };
         if (points >= 10) return { level: 1, name: 'Sprout 🌱' };
         return { level: 0, name: 'Seed 🌰' };

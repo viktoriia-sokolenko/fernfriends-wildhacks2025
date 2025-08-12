@@ -67,6 +67,7 @@ const updatePoints = async (userId) => {
       if (updateError) {
           throw updateError;
       }
+      console.log(`Updated points for user ${userId}`);
     }
 };
 
@@ -336,7 +337,8 @@ app.delete('/api/users/:id', checkAuth, async (req, res) => {
     if (Object.keys(updates).length === 0) {
       return res.status(400).json({ error: 'No update parameters provided' });
     }
-    console.log('Updating plant with ID:', id);
+
+    console.log('Updating/Inserting plant with ID:', id);
 
     try {
       const { data: existingPlant, error: fetchError } = await supabase
@@ -357,13 +359,14 @@ app.delete('/api/users/:id', checkAuth, async (req, res) => {
           .single();
 
         if (insertError) {
+          console.error('Error inserting new plant:', insertError);
           throw insertError;
         }
 
         const { data: userData, error: fetchError } = await supabase
         .from('users')
         .select('num_plants')
-        .eq('id', user_id)
+        .eq('id', newPlant.user_id)
         .single();
 
         if (fetchError) {
@@ -371,16 +374,22 @@ app.delete('/api/users/:id', checkAuth, async (req, res) => {
         return;
         }
 
-        const { data, error } = await supabase
+        const { error: updateUserError } = await supabase
         .from('users')
         .update({ num_plants: userData.num_plants + 1 })
-        .eq('id', user_id);
-        if (error) {
-          console.error('Error updating user plant count:', error);
-          return res.status(500).json({ error: 'Failed to update user plant count' });
+        .eq('id', newPlant.user_id);
+
+        if (updateUserError) {
+          console.error('Error updating user plant count:', updateUserError);
+          throw updateUserError;
         }
 
         console.log('Created new plant:', newPlant.id);
+        try {
+          await updatePoints(newPlant.user_id);
+        } catch (error) {
+          console.error(`Error updating points for user ${newPlant.user_id}:`, error);
+        }
         return res.status(201).json(newPlant);
       }
 
@@ -398,18 +407,18 @@ app.delete('/api/users/:id', checkAuth, async (req, res) => {
       }
 
       if (!data) {
-        return res.status(404).json({ error: 'Plant not found' });
+        return res.status(404).json({ error: `Plant with id ${id} not found` });
       }
 
       console.log('Updated plant:', data.id);
-
       try {
-        await updatePoints(existingPlant.user_id);
+        await updatePoints(data.user_id);
       } catch (error) {
-        console.error(`Error updating points for user ${existingPlant.user_id}:`, error);
+        console.error(`Error updating points for user ${data.user_id}:`, error);
       }
 
       res.json(data);
+
     } catch (error) {
       console.error(`Error processing plant with ID ${id}:`, error);
       res.status(500).json({ error: 'Server Error' });
@@ -420,7 +429,6 @@ app.delete('/api/users/:id', checkAuth, async (req, res) => {
   app.delete('/api/plants/:id/:user_id', checkAuth, async (req, res) => {
     const { id, user_id } = req.params;
     console.log('Deleting plant with ID:', id);
-    console.log('User ID:', user_id);
     try {
       const { error } = await supabase
         .from('plants')
@@ -437,8 +445,8 @@ app.delete('/api/users/:id', checkAuth, async (req, res) => {
       .single();
 
       if (fetchError) {
-      console.error(fetchError);
-      return;
+        console.error(fetchError);
+        throw new Error(`Failed to fetch user data for user ID: ${user_id}`);
       }
 
       const { data, error: updateError } = await supabase
@@ -447,8 +455,16 @@ app.delete('/api/users/:id', checkAuth, async (req, res) => {
       .eq('id', user_id);
       if (updateError) {
         console.error('Error updating user plant count:', updateError);
-        return res.status(500).json({ error: 'Failed to update user plant count' });
+        throw new Error('Failed to update user plant count');
       }
+      console.log('Plant deleted successfully:', id);
+
+      try {
+        await updatePoints(user_id);
+      } catch (error) {
+        console.error(`Error updating points for user ${user_id}:`, error);
+      }
+
       res.status(204).send();
     } catch (error) {
       console.error(`Error deleting plant with ID ${id}:`, error);
