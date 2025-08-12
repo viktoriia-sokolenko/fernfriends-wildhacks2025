@@ -49,7 +49,7 @@ const updatePoints = async (userId) => {
 
           if (diffMs > 0) {
               const wateringPeriodsPassed = Math.floor(diffMs / wateringPeriodMs);
-              totalPoints += wateringPeriodsPassed * 10; // 10 points per watering period
+              totalPoints += wateringPeriodsPassed * 5; // 5 points per watering period
           }
       });
       const now = new Date();

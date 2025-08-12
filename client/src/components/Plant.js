@@ -57,7 +57,7 @@ const Plant = ({plant}) => {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`
                 },
-                body: JSON.stringify({last_watering: today}),
+                body: JSON.stringify({last_watering: today, user_id: plant.user_id}),
             });
     
             if (!response.ok) {
