@@ -8,7 +8,7 @@ function App() {
     boostProductivity: false,
     healthierEnvironment: false,
     moodEnhancement: false,
-    connectWithOthers: false, // New toggle for connecting with plant lovers
+    connectWithOthers: false,
   });
 
   const toggleSection = (section) => {
@@ -28,6 +28,7 @@ function App() {
       </header>
 
       <div className="plant-characteristics">
+        
         {/* Breathe Easier Section */}
         <div className="characteristic">
           <button

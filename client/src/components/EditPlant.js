@@ -10,7 +10,6 @@ const EditPlant = ({plants}) => {
         return formattedDate;
     };
     const { userId, token } = useAuth();
-    console.log("token from context:", token);
     const newPlantId = BigInt(Math.floor(Math.random() * Number.MAX_SAFE_INTEGER));
     const navigate = useNavigate();
     const [plant, setPlant] = useState({
@@ -69,7 +68,6 @@ const EditPlant = ({plants}) => {
             });
             setPlantSelected(true);
         }
-        console.log('Form data:', formData);
     }
     const [plantSelected, setPlantSelected] = useState(false);
     const handleChange = (e) => {
@@ -79,10 +77,8 @@ const EditPlant = ({plants}) => {
 
     const editPlantData = async(e) => {
         e.preventDefault();
-        console.log('Saving:', formData);
         if (!token) {
             token = localStorage.getItem('access_token');
-            console.log('Token from localStorage:', token);
         }
         if (!token) {
             console.error('No token found');
@@ -111,7 +107,6 @@ const EditPlant = ({plants}) => {
     };
     const handleDelete = async(e) => {
         e.preventDefault();
-        console.log('Deleting:', formData);
         const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/plants/${formData.id}/${userId}`, {
             method: "DELETE",
             headers: {
@@ -122,7 +117,6 @@ const EditPlant = ({plants}) => {
         if (!response.ok) {
             throw new Error("Failed to delete plant");
         }
-        console.log("Plant deleted successfully");
         window.location = `/plants`;
     }
     return (

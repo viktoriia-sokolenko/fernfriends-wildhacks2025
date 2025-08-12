@@ -28,7 +28,6 @@ const Leaderboard = () => {
       try {
         if (!token) {
             token = localStorage.getItem('access_token');
-            console.log('Token from localStorage:', token);
         }
         if (!token) {
             console.error('No token found');
@@ -74,6 +73,7 @@ const Leaderboard = () => {
             <th>Location</th>
             <th>Bio</th>
             <th>Points</th>
+            <th>Plants</th>
             <th>Action</th>
           </tr>
         </thead>
@@ -92,6 +92,7 @@ const Leaderboard = () => {
               <td>{user.location}</td>
               <td>{user.bio}</td>
               <td>{user.points}</td>
+              <td>{user.num_plants}</td>
               <td>
                 {user.private ? (
                   'Private'

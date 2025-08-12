@@ -12,11 +12,8 @@ const Plants = () => {
     useEffect(() => {
       const fetchPlants = async () => {
         try {
-          console.log('Fetching plants for user:', userId);
-          console.log('Token:', token);
           if (!token){
             token = localStorage.getItem('access_token');
-            console.log('Token from localStorage:', token);
           }
           if (!token) {
             console.error('No token found');

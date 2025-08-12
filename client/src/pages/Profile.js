@@ -35,11 +35,12 @@ const Profile = () => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
-
-  const { level, name } = getLevelInfo(user.points);
+  
+  const [level, setLevel] = useState(0);
+  const [name, setName] = useState('');
+  
 
   const handleEdits = async (e) => {
-    console.log('Saving:', formData);
     try {
       if (!token) {
         token = localStorage.getItem('access_token');
@@ -55,8 +56,7 @@ const Profile = () => {
         console.error('No userId found');
         return;
       }
-      console.log('Updating user data for userId:', userId);
-      console.log('Token:', token);
+
       const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/users/${userId}`, {
         method: 'PUT',
         headers: {
@@ -106,8 +106,6 @@ const Profile = () => {
         if (!response.ok) {
           throw new Error('Failed to delete user profile');
         }
-
-        console.log('User profile deleted successfully');
         localStorage.removeItem('access_token');
         localStorage.removeItem('user_id');
         navigate('/signup');
@@ -133,8 +131,7 @@ const Profile = () => {
           console.error('No userId found');
           return;
         }
-        console.log('Fetching user data for userId:', userId);
-        console.log('Token:', token);
+
         const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/users/${userId}`, {
           method: 'GET',
           headers: {
@@ -147,9 +144,11 @@ const Profile = () => {
         }
 
         const data = await response.json();
-        console.log('User data:', data);
         setUser(data);
         setFormData(data);
+        const { level, name } = getLevelInfo(data.points);
+        setLevel(level);
+        setName(name);
       } catch (error) {
         console.error('Error fetching user data:', error);
       }

@@ -46,7 +46,6 @@ const Plant = ({plant}) => {
             setLastWatering(today);
             if (!token) {
                 token = localStorage.getItem('access_token');
-                console.log('Token from localStorage:', token);
             }
             if (!token) {
                 console.error('No token found');
@@ -66,7 +65,6 @@ const Plant = ({plant}) => {
             }
     
             const data = await response.json();
-            console.log("Watering date updated successfully:", data);
             navigate(`/plants`);
         }
     }

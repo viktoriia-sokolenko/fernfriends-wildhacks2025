@@ -26,11 +26,6 @@ const SignIn = () => {
             if (data.error) throw new Error(data.error);
             localStorage.setItem("access_token", data.token);
             localStorage.setItem("user_id", data.userId);
-            console.log("Login successful");
-            console.log("User ID:", data.userId);
-            console.log("Token:", data.token);
-            localStorage.setItem("access_token", data.token);
-            localStorage.setItem("user_id", data.userId);
             setToken(data.token);
             setUserId(data.userId);
             setError("");

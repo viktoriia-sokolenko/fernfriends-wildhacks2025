@@ -11,7 +11,6 @@ const SignUp = () => {
 
     const handleSignUp = async (e) => {
         e.preventDefault();
-        console.log(process.env.REACT_APP_API_BASE_URL);
         try {
             const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/register`, {
                 method: "POST",
@@ -21,7 +20,6 @@ const SignUp = () => {
                 body: JSON.stringify({ email, password, username }),
             });
             const data = await response.json();
-            console.log(data);
             if (data.error) throw new Error(data.error);
             setError("Registration successful! Confirm your email and sign in.");
             navigate('/');

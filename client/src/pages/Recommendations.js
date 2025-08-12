@@ -58,8 +58,6 @@ function Recommendations() {
       renamedFormData[newKey] = formData[key];
     });
 
-    console.log(prompt + JSON.stringify(renamedFormData));
-
     const response = await ai.models.generateContent({
       model: "gemini-2.0-flash",
       contents: prompt + JSON.stringify(renamedFormData),
