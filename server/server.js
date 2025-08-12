@@ -404,10 +404,9 @@ app.delete('/api/users/:id', checkAuth, async (req, res) => {
       console.log('Updated plant:', data.id);
 
       try {
-        await updatePoints(user_id);
+        await updatePoints(existingPlant.user_id);
       } catch (error) {
-        console.error(`Error updating points on login for user ${user_id}:`, error);
-        return res.status(500).json({ error: 'Failed to update user points' });
+        console.error(`Error updating points for user ${existingPlant.user_id}:`, error);
       }
 
       res.json(data);
