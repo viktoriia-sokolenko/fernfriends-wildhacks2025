@@ -55,7 +55,7 @@ const Plants = () => {
       ) : (
         <div className='plants-container'>
         {plants.length === 0 ? (
-          <h2>No plants found or your plants are still loading ... </h2>
+          <p>No plants found or your plants are still loading ... </p>
         ) : (
           <div className="plants-list">
             {plants.map((plant) => (

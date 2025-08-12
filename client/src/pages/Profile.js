@@ -69,8 +69,7 @@ const Profile = () => {
         throw new Error('Failed to update user data');
       }
       const data = await response.json();
-      console.log('User data updated successfully:', data);
-      setUser(formData);
+      setUser(data);
       setEditMode(false);
       navigate('/profile');
     } catch (error) {

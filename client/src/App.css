@@ -40,6 +40,7 @@ body {
 /* Apply custom font to titles */
 h1, h2, h3, h4, h5, h6 {
   font-family: 'CustomFont', sans-serif;
+  letter-spacing: 0.1em;
 }
 
 /* Center the divs but keep text left-aligned */
@@ -67,6 +68,19 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .app-header p {
+  font-size: 1.2rem;
+  margin-top: 10px;
+  text-align: left; /* Keep intro text left-aligned */
+  font-family: 'Arial', sans-serif; /* Default font for paragraph text */
+}
+
+.additional-info {
+  margin-bottom: 30px;
+  padding: 20px;
+  background-color: var(--nav-bar);
+  color: var(--text-light);
+  border-radius: 10px;
+  box-shadow: 0 4px 8px var(--shadow);
   font-size: 1.2rem;
   margin-top: 10px;
   text-align: left; /* Keep intro text left-aligned */
@@ -115,7 +129,8 @@ h1, h2, h3, h4, h5, h6 {
   margin-bottom: 10px;
   width: 100%;
   text-align: left;
-  font-family: 'CustomFont', sans-serif; /* Apply custom font */
+  box-sizing: border-box; /* Ensure padding is included in width */
+  /* font-family: 'CustomFont', sans-serif; Apply custom font */
 }
 
 .toggle-button:hover {
@@ -127,7 +142,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* Apply custom font to buttons */
-button, .toggle-button, .connect-button {
+button, .connect-button {
   font-family: 'CustomFont', sans-serif;
   text-transform: uppercase; /* Optional: Make button text uppercase for a retro look */
 }
